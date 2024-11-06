@@ -1,50 +1,40 @@
-# Objetivo do Trabalho
+# Objetivo e Descrição do Trabalho
 
-Esse trabalho tem como objetivo ser um guia prático para a implementação de microsserviços orientado a eventos. O mesmo tem como público desenvolvedores que estão iniciando em projetos desse escopo. Além disso o projeto desenvolvido ao longo desse trabalho bem como a tomada de decisão é baseada no desenvolvimento de uma aplicação com o seguinte tema: *Sistema de um Restaurante de Delivery*.
+Esse trabalho tem como objetivo ser um guia prático para a implementação de projetos baseados nas arquiteturas de microsserviços e orientada a eventos. O tema da aplicação desenvolvida é um Sistema de Gerenciamento de Delivery de Supermercados. Ademais, vale ressaltar que esse trabalho não tem como intuito implementar todos os aspectos do tema base base da aplicação em termos de funcionalidades, mas apenas o suficiente para mostrar as tomadas de decisão em relação aos problemas que surgem e as respectivas soluções nos contextos de cada arquitetura, já mencionadas acima.
 
-## Características Básicas
+## Aspectos fundamentais das arquiteturas
 
-Características básicas e essenciais que um projeto implementado utilizando microsserviços e arquitetura orientada a eventos deve apresentar
+Caracterítiscas fundamentais e essenciais de cada arquitetura
 
 ### Microsserviços
 
-- Autonomia: Cada microserviço é independente e deve ser capaz de operar sem depender diretamente de outros microserviços. Isso facilita a escalabilidade e o falhas.
-- Especialização: Cada microserviço é responsável por uma funcionalidade específica, como pedidos, controle de estoque ou processamento de pagamentos. Essa especialização promove coesão e simplifica a manutenção.
-- Comunicação por APIs: Os microserviços se comunicam entre si por meio de APIs (normalmente REST ou gRPC), garantindo que as interfaces sejam bem definidas e os serviços sejam desacoplados.
-- Descentralização de Dados: Cada microserviço deve possuir seu próprio banco de dados para garantir independência total, evitando o compartilhamento direto de dados entre eles.
-- Escalabilidade Independente: Cada serviço pode ser escalado de acordo com a demanda específica de sua função, otimizando o uso de recursos e permitindo uma resposta mais eficiente ao aumento de usuários.
-
 ### Arquitetura Orientada a Eventos
 
-- Eventos: São mensagens que representam uma mudança de estado, como a criação de um pedido ou a confirmação de um pagamento. Estes eventos desencadeiam ações em outros componentes ou serviços interessados.
-- Produtores de Eventos: São os serviços que geram e publicam eventos para notificar outras partes do sistema sobre mudanças. Por exemplo, um serviço de pedidos que gera um evento quando um novo pedido é criado.
-- Consumidores de Eventos: São serviços que escutam e reagem aos eventos, executando ações em resposta a mudanças, como um serviço de inventário que atualiza o estoque quando um pedido é feito.
-- Mediadores de Mensagens (Message Brokers): Ferramentas como Apache Kafka ou RabbitMQ, que facilitam o roteamento e a entrega de eventos entre produtores e consumidores, garantindo que os eventos sejam entregues corretamente e em ordem.
-- Tópicos ou Filas: Estruturas onde os eventos são armazenados temporariamente até que os consumidores os processem, facilitando a distribuição e o controle de fluxo dos eventos.
+## Delimitação
 
-## Delimitação do Guia
+Nesse tópico será delimitado a resolução para alguns problemas que serão enfrentados em projetos como esses. O atual trabalho visa abordar apenas os aspectos fundamentais anteriormente definidos que na visão desse trabalho são bases fundamentais e mínimas para projetos que utilizam esses tipos de arquiteturas, são eles:
 
-Esse guia tem como foco mostrar a tomada de decisão bem como o embasamento quanto aos seguintes aspectos de um projeto que envolva tais arquiteturas:
+- Decomposição dos Microsserviços
+- Comunicação Assíncrona vs Síncrona
+- Padrão de comunicação das API's
+- Organização quanto a emissão e reação aos eventos
+- Broker para o armazenamento dos eventos
 
-- Aspecto 1
-- Aspecto 2
-- Aspecto 3
-- Aspecto 4
+## Descrições Técnicas do Projeto
 
-## Decomposição dos Microsserviços
+### Microsserviços
 
-Aqui estão todos os microsserviços que irão compor o escopo do problema escolhida como tema do projeto. A decomposição dos serviços foi feita com base *Aqui cita o nome do padrão utilizado para a decomposição, além de toda a referência e o racional*
+#### Visão Macro da Arquitetura
+
+#### Definição dos Microsserviços
 
 - Pedidos
-- Entregas
-- Clientes
-- Cozinha
+- Notificação
 - Pagamento
-## Eventos
-
-### Eventos Gerados e Produzidos por cada Serviço
-
-#### Pedidos
+- Entrega
+- Estoque
+- Usuário
+- Supermercados
 
 - Gerados:
   - OrderPlaced
@@ -102,19 +92,11 @@ Aqui estão todos os microsserviços que irão compor o escopo do problema escol
 
 #### OrderUpdated
 
-#### OrderInPreparation
-
-![alt text]({444D55D3-D4F3-4C55-ABF4-ACEB3C6DCB18}.png)
-
-#### OrderCompleted
-
-![alt text]({A85C867B-599A-41B4-8CC0-9FAA26234B7C}.png)
-
-## Tecnologias Utilizadas no Projeto
+### Tecnologias Utilizadas
 
 - Docker
 - PostgreSQL
-- Typescript
-- Nest JS
 - RabbitMQ
-- Prisma
+- Typescript
+- NestJS
+- TypeORM
