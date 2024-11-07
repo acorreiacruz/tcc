@@ -21,6 +21,39 @@ export default class Order {
         paymentMethod: string,
         total: number
     ) {
+        if (!Object.values(Status).includes(status as Status)) {
+            throw new Error(
+                `Invalid status value. It only is possible: ${Object.values(
+                    Status
+                ).join(", ")}`
+            );
+        }
+        if (
+            !Object.values(PaymentMethod).includes(
+                paymentMethod as PaymentMethod
+            )
+        ) {
+            throw new Error(
+                `Invalid payment method. It only is possible: ${Object.values(
+                    PaymentMethod
+                ).join(", ")}`
+            );
+        }
+        if (
+            !Object.values(FulfillmentMethod).includes(
+                fulfillmentMethod as FulfillmentMethod
+            )
+        ) {
+            throw new Error(
+                `Invalid payment method. It only is possible: ${Object.values(
+                    FulfillmentMethod
+                ).join(", ")}`
+            );
+        }
+        if (total <= 0)
+            throw new Error(
+                "The total value of a order should be a positive number"
+            );
         this.orderDate = orderDate;
         this.userId = userId;
         this.orderId = orderId;
