@@ -35,11 +35,28 @@ Nesse tópico será delimitado a resolução para alguns problemas que serão en
 - Estoque
 - Usuário
 - Supermercados
+### Arquitetura Orientada a Eventos
+
+#### Eventos
+
+Relação dos eventos gerados e escutados por cada um dos microsserviços, além da orquestração destes mesmos em relação a aqueles. Vale ressaltar que só está sendo mostrado os microsserviços que utilizam eventos para se comunicarem, sendo excluídos dessa lista os de Usuários e de Supermercados.
+
+##### Order
 
 - Gerados:
   - OrderPlaced
   - OrderCanceled
   - OrderUpdated
+  - OrderConfirmed
+
+##### Delivery
+
+- Gerados:
+  - OrderBeingPrepared
+  - OrderReadyForDelivery
+  - OrderOutForDelivery
+  - DeliveryFailed
+  - DeliveryConfirmed
 - Escutados:
   - PaymentConfirmed
   - PaymentRefused
@@ -50,22 +67,24 @@ Nesse tópico será delimitado a resolução para alguns problemas que serão en
   - OrderDeliveryFailed
   - OrderDelivered
 
-#### Entregas
+##### Stock
 
 - Gerados:
-  - OrderOutForDelivery
-  - OrderDelivered
-  - OrderDeliveryFailed
+  - StockReserved
+  - StockReleased
+  - StockPrepared
+  - StockNotFounded
 - Escutados:
-  - OrderCompleted
+  - OrderPlaced
+  - OrderUpdated
+  - OrderCanceled
 
-#### Pagamentos
+##### Payment
 
 - Gerados:
   - PaymentConfirmed
-  - PaymentRefused
-  - PaymentPending
   - PaymentRefunded
+  - PaymentFailed
 - Escutados:
   - OrderCanceled
   - OrderUpdated *Nesse caso aqui tem que ver como vai ser do pagamento para a cozinha*
