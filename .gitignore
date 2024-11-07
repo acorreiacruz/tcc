@@ -1,3 +1,4 @@
 node_modules/
 .markdownlint.json
 tsconfig.json
+coverage/
