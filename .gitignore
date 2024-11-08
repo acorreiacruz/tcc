@@ -2,3 +2,7 @@ node_modules/
 .markdownlint.json
 tsconfig.json
 coverage/
+*.config.js
+*.config.ts
+*.json
+.env
