@@ -124,7 +124,7 @@ export default class Order {
     static restore(
         orderId: string,
         userId: string,
-        orderDate: string,
+        orderDate: Date,
         status: string,
         fulfillmentMethod: string,
         paymentMethod: string,
@@ -133,7 +133,7 @@ export default class Order {
         return new Order(
             orderId,
             userId,
-            new Date(orderDate),
+            orderDate,
             status,
             fulfillmentMethod,
             paymentMethod,
