@@ -1,5 +1,5 @@
-import Item from "./Item";
-import OrderItem from "./orderItem";
+import Item from "./item";
+import OrderItem from "../value_object/orderItem";
 import crypto from "crypto";
 
 export default class Order {
@@ -76,7 +76,7 @@ export default class Order {
         return this.status;
     }
 
-    getOrderId(): string {
+    getId(): string {
         return this.orderId;
     }
 
