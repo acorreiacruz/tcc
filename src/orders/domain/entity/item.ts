@@ -12,6 +12,8 @@ export default class Item {
         description: string,
         price: number
     ) {
+        if (name.length > 150)
+            throw new Error("Item name has a maximum of 150 characters");
         if (price <= 0)
             throw new Error(
                 "The item price must be a strictly positive number"
