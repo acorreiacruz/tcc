@@ -1,4 +1,4 @@
-import OrderItem from "../../domain/entity/orderItem";
+import OrderItem from "../../domain/value_object/orderItem";
 import crypto from "crypto";
 
 describe("Unit testing OrderItem value object", () => {
