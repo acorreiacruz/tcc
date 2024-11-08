@@ -26,4 +26,16 @@ describe("Unit testing Item entity", () => {
                 )
         ).toThrow("Item description has a maximum of 300 characters");
     });
+
+    test("Must not create a Item with invalid name length", () => {
+        expect(
+            () =>
+                new Item(
+                    crypto.randomUUID(),
+                    "Item".repeat(40),
+                    "Description",
+                    5.5
+                )
+        ).toThrow("Item name has a maximum of 150 characters");
+    });
 });
