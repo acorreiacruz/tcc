@@ -1,4 +1,4 @@
-import Item from "../../domain/entity/Item";
+import Item from "../../domain/entity/item";
 import Order from "../../domain/entity/order";
 import crypto from "crypto";
 
@@ -9,16 +9,8 @@ let orderDate: Date = new Date(orderDateString);
 let fulfillmentMethod: string = "delivery";
 let paymentMethod: string = "credit_card";
 let status: string = "pending";
-let item1: Item = Item.create("Ventilador", "Ventilador", 40, 40, 80, 2.5, 150);
-let item2: Item = Item.create(
-    "Liquidificador",
-    "Liquidificador",
-    20,
-    15,
-    45,
-    1,
-    50
-);
+let item1: Item = Item.create("Item1", "Item1 Description", 150);
+let item2: Item = Item.create("Item2", "Item2 Description", 50);
 
 describe("Unit testing Order", () => {
     test("Must create a Order", () => {
@@ -48,9 +40,8 @@ describe("Unit testing Order", () => {
     });
 
     test("Must not create a Order with invalid fulfillment method", () => {
-        fulfillmentMethod = "other";
         expect(() =>
-            Order.create(userId, orderDate, fulfillmentMethod, paymentMethod)
+            Order.create(userId, orderDate, "other", paymentMethod)
         ).toThrow(
             "Invalid payment method. It only is possible: delivery, withdrawal"
         );
@@ -71,22 +62,20 @@ describe("Unit testing Order", () => {
     });
 
     test("Must not create a Order with invalid payment method", () => {
-        paymentMethod = "different";
         expect(() =>
-            Order.create(userId, orderDate, fulfillmentMethod, paymentMethod)
+            Order.create(userId, orderDate, fulfillmentMethod, "different")
         ).toThrow(
             "Invalid payment method. It only is possible: credit_card, pix, debit_card"
         );
     });
 
     test("Must not create a Order with invalid status", () => {
-        status = "something_different";
         expect(() =>
             Order.restore(
                 orderId,
                 userId,
                 orderDateString,
-                status,
+                "other_status",
                 fulfillmentMethod,
                 paymentMethod,
                 10
@@ -96,4 +85,32 @@ describe("Unit testing Order", () => {
         );
     });
 
+    test("Must confirm a pending Order", () => {
+        const order = Order.create(
+            userId,
+            orderDate,
+            fulfillmentMethod,
+            paymentMethod
+        );
+        expect(order.getStatus()).toBe("pending");
+        order.confirm();
+        expect(order.getStatus()).toBe("confirmed");
+    });
+
+    test("Must not confirm Order that has not a 'pending' status", () => {
+        status = "confirmed";
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDateString,
+            status,
+            fulfillmentMethod,
+            paymentMethod,
+            100
+        );
+        expect(order.getStatus()).toBe("confirmed");
+        expect(() => order.confirm()).toThrow(
+            "You cannot confirm a Order that is not 'pending'"
+        );
+    });
 });

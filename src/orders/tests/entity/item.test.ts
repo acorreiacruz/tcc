@@ -1,4 +1,4 @@
-import Item from "../../domain/entity/Item";
+import Item from "../../domain/entity/item";
 import crypto from "crypto";
 
 describe("Unit testing Item entity", () => {
