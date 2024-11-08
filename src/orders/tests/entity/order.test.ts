@@ -52,7 +52,7 @@ describe("Unit testing Order", () => {
             Order.restore(
                 orderId,
                 userId,
-                orderDateString,
+                orderDate,
                 status,
                 fulfillmentMethod,
                 paymentMethod,
@@ -74,7 +74,7 @@ describe("Unit testing Order", () => {
             Order.restore(
                 orderId,
                 userId,
-                orderDateString,
+                orderDate,
                 "other_status",
                 fulfillmentMethod,
                 paymentMethod,
@@ -102,7 +102,7 @@ describe("Unit testing Order", () => {
         const order = Order.restore(
             orderId,
             userId,
-            orderDateString,
+            orderDate,
             status,
             fulfillmentMethod,
             paymentMethod,
