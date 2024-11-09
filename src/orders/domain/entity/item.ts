@@ -56,7 +56,7 @@ export default class Item {
         return new Item(itemId, name, description, price);
     }
 
-    toJSON(): Object {
+    toJSON(): any {
         return {
             itemId: this.itemId,
             name: this.name,
