@@ -55,4 +55,13 @@ export default class Item {
     ): Item {
         return new Item(itemId, name, description, price);
     }
+
+    toJSON(): Object {
+        return {
+            itemId: this.itemId,
+            name: this.name,
+            description: this.description,
+            price: this.price,
+        };
+    }
 }
