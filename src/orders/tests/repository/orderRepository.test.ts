@@ -49,4 +49,15 @@ describe("Testing OrderRepository", () => {
         const orderReceived = await orderRepository.getById(order.getId());
         expect(orderReceived).toBeTruthy();
     });
+    test("Must update a Order", async () => {
+        expect(order.getTotal()).toBe(0);
+        expect(order.getOrderItems().length).toBe(0);
+        await orderRepository.create(order);
+        order.addItem(item1, 3);
+        order.addItem(item2, 4);
+        await orderRepository.update(order);
+        const orderUpdated = await orderRepository.getById(order.getId());
+        expect(orderUpdated.getTotal()).toBe(185);
+        expect(order.getOrderItems().length).toBe(2);
+    });
 });
