@@ -4,24 +4,24 @@ import crypto from "crypto";
 
 export default class OrderPlaced implements DomainEvent {
     public eventId: string;
-    public entityId: string;
     public correlationId: string;
+    public entityId: string;
     public name: string;
     public timestamp: Date;
     public source: string;
     public payload: Object;
     private constructor(
         eventId: string,
-        entityId: string,
         correlationId: string,
+        entityId: string,
         timestamp: Date,
         payload: Object
     ) {
         this.eventId = eventId;
         this.correlationId = correlationId;
         this.entityId = entityId;
-        this.timestamp = timestamp;
         this.name = "OrderPlaced";
+        this.timestamp = timestamp;
         this.source = "OrderService";
         this.payload = payload;
     }
@@ -39,5 +39,17 @@ export default class OrderPlaced implements DomainEvent {
                 total: order.getTotal(),
             }
         );
+    }
+
+    toJSON(): Object {
+        return {
+            eventId: this.eventId,
+            correlationId: this.correlationId,
+            entityId: this.entityId,
+            name: this.name,
+            timestamp: this.timestamp,
+            source: this.source,
+            payload: this.payload,
+        };
     }
 }
