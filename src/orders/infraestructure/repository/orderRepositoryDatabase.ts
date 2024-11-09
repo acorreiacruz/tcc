@@ -8,4 +8,23 @@ export default class OrderRepositoryDatabase implements OrderRepository {
     constructor() {
         this.client = new PrismaClient();
     }
+
+    async getById(orderId: string): Promise<Order> {
+        const orderData = await this.client.order.findUnique({
+            where: {
+                orderId: orderId,
+            },
+        });
+        if (!orderData)
+            throw new Error(`There is no order with this id: ${orderId}`);
+        return Order.restore(
+            orderData.orderId,
+            orderData.userId,
+            orderData.orderDate,
+            orderData.status,
+            orderData.fulfillmentMethod,
+            orderData.paymentMethod,
+            orderData.total
+        );
+    }
 }
