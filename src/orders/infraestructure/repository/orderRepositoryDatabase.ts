@@ -1,10 +1,11 @@
 import Order from "../../domain/entity/order";
+import DomainEvent from "../../domain/event/domainEvent";
 import OrderRepository from "../../domain/repository/orderRepository";
 import { PrismaClient } from "@prisma/client";
 
 export default class OrderRepositoryDatabase implements OrderRepository {
     private client: PrismaClient;
-    
+
     constructor() {
         this.client = new PrismaClient();
     }
@@ -28,7 +29,7 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         );
     }
 
-    async create(order: Order): Promise<void> {
+    async create(order: Order, event: DomainEvent): Promise<void> {
         await this.client.order.create({
             data: {
                 orderId: order.getId(),
@@ -41,11 +42,19 @@ export default class OrderRepositoryDatabase implements OrderRepository {
                 orderItems: {
                     create: Object.assign(order.getOrderItems()),
                 },
+                orderOutbox: {
+                    create: {
+                        eventId: event.eventId,
+                        eventName: event.name,
+                        status: "pending",
+                        payload: JSON.stringify(event),
+                    },
+                },
             },
         });
     }
-    
-    async update(order: Order): Promise<void> {
+
+    async update(order: Order, event: DomainEvent): Promise<void> {
         const orderData = await this.client.order.update({
             where: {
                 orderId: order.getId(),
@@ -55,6 +64,14 @@ export default class OrderRepositoryDatabase implements OrderRepository {
                 paymentMethod: order.getPaymentMethod(),
                 fulfillmentMethod: order.getFulfillmentMethod(),
                 total: order.getTotal(),
+                orderOutbox: {
+                    create: {
+                        eventId: event.eventId,
+                        eventName: event.name,
+                        status: "pending",
+                        payload: JSON.stringify(event),
+                    },
+                },
             },
         });
         if (!orderData)
