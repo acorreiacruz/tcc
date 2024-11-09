@@ -64,6 +64,10 @@ export default class Order {
         this.total = total;
     }
 
+    getOrderDate(): Date {
+        return this.orderDate;
+    }
+
     getTotal(): number {
         return this.total;
     }
