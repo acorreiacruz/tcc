@@ -44,4 +44,20 @@ export default class OrderRepositoryDatabase implements OrderRepository {
             },
         });
     }
+    
+    async update(order: Order): Promise<void> {
+        const orderData = await this.client.order.update({
+            where: {
+                orderId: order.getId(),
+            },
+            data: {
+                status: order.getStatus(),
+                paymentMethod: order.getPaymentMethod(),
+                fulfillmentMethod: order.getFulfillmentMethod(),
+                total: order.getTotal(),
+            },
+        });
+        if (!orderData)
+            throw new Error(`There is no order with this id: ${order.getId()}`);
+    }
 }
