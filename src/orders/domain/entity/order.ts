@@ -145,7 +145,7 @@ export default class Order {
         );
     }
 
-    toJSON(): Object {
+    toJSON(): any {
         return {
             orderId: this.orderId,
             userId: this.userId,
