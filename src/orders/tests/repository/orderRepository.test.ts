@@ -49,6 +49,13 @@ describe("Testing OrderRepository", () => {
         const orderReceived = await orderRepository.getById(order.getId());
         expect(orderReceived).toBeTruthy();
     });
+
+    test("Must throw a error when there is no Order with specific id", async () => {
+        expect(async () => await orderRepository.getById(order.getId())).rejects.toThrow(
+            `There is no order with this id: ${order.getId()}`
+        );
+    });
+
     test("Must update a Order", async () => {
         expect(order.getTotal()).toBe(0);
         expect(order.getOrderItems().length).toBe(0);
