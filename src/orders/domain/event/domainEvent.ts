@@ -6,4 +6,6 @@ export default interface DomainEvent {
     timestamp: Date;
     source: string;
     payload: Object;
+
+    toJSON(): Object;
 }
