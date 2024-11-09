@@ -28,7 +28,7 @@ export default class OrderItem {
         return this.price;
     }
 
-    toJSON(): Object {
+    toJSON(): any {
         return {
             itemId: this.itemId,
             quantity: this.quantity,
