@@ -27,4 +27,12 @@ export default class OrderItem {
     getPrice(): number {
         return this.price;
     }
+
+    toJSON(): Object {
+        return {
+            itemId: this.itemId,
+            quantity: this.quantity,
+            price: this.price,
+        };
+    }
 }
