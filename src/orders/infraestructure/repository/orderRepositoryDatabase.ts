@@ -27,4 +27,21 @@ export default class OrderRepositoryDatabase implements OrderRepository {
             orderData.total
         );
     }
+
+    async create(order: Order): Promise<void> {
+        await this.client.order.create({
+            data: {
+                orderId: order.getId(),
+                userId: order.getUserId(),
+                status: order.getStatus(),
+                paymentMethod: order.getPaymentMethod(),
+                fulfillmentMethod: order.getFulfillmentMethod(),
+                total: order.getTotal(),
+                orderDate: order.getOrderDate(),
+                orderItems: {
+                    create: Object.assign(order.getOrderItems()),
+                },
+            },
+        });
+    }
 }
