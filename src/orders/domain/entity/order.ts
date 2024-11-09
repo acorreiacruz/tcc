@@ -145,6 +145,18 @@ export default class Order {
         );
     }
 
+    toJSON(): Object {
+        return {
+            orderId: this.orderId,
+            userId: this.userId,
+            orderItems: this.orderItems,
+            orderDate: this.orderDate,
+            status: this.status,
+            fulfillmentMethod: this.fulfillmentMethod,
+            paymentMethod: this.paymentMethod,
+            total: this.total,
+        };
+    }
 }
 
 enum Status {
