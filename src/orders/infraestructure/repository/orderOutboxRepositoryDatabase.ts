@@ -9,6 +9,15 @@ export default class OrderOutboxRepositoryDatabase implements OutboxRepository {
         this.connection = new PrismaClient();
     }
 
+    async update(outboxes: Outbox[]): Promise<void> {
+        this.connection.orderOutbox.updateMany({
+            where: {
+                id: { in: outboxes.map((outbox) => outbox.id) },
+            },
+            data: outboxes,
+        });
+    }
+
     async create(event: DomainEvent): Promise<any> {
         await this.connection.orderOutbox.create({
             data:{
