@@ -58,26 +58,20 @@ Relação dos eventos gerados e escutados por cada um dos microsserviços, além
   - DeliveryFailed
   - DeliveryConfirmed
 - Escutados:
-  - PaymentConfirmed
-  - PaymentRefused
-  - PaymentRefunded
-  - OrderInPreparation
-  - OrderQueued
-  - OrderOutForDelivery
-  - OrderDeliveryFailed
-  - OrderDelivered
+  - StockPrepared
 
 ##### Stock
 
 - Gerados:
   - StockReserved
   - StockReleased
-  - StockPrepared
+  - StockConfirmed
   - StockNotFounded
 - Escutados:
   - OrderPlaced
   - OrderUpdated
   - OrderCanceled
+  - PaymentConfirmed
 
 ##### Payment
 
@@ -86,30 +80,8 @@ Relação dos eventos gerados e escutados por cada um dos microsserviços, além
   - PaymentRefunded
   - PaymentFailed
 - Escutados:
-  - OrderCanceled
-  - OrderUpdated *Nesse caso aqui tem que ver como vai ser do pagamento para a cozinha*
-
-#### Cozinha
-
-- Gerados:
-  - OrderQueued
-  - OrderInPreparation
-  - OrderCompleted
-- Escutados:
-  - PaymentConfirmed
-  - OrderCanceled
-
-### Orquestração dos Eventos
-
-#### OrderPlaced
-
-![alt text]({8861B9C4-0925-4A86-A2DD-6F17F038E0AC}.png)
-
-#### OrderCanceled
-
-![alt text]({6550DC22-172B-4A97-833A-AE5DFC2F94CF}.png)
-
-#### OrderUpdated
+  - StockReserved
+  - StockReleased
 
 ### Tecnologias Utilizadas
 
@@ -118,4 +90,4 @@ Relação dos eventos gerados e escutados por cada um dos microsserviços, além
 - RabbitMQ
 - Typescript
 - NestJS
-- TypeORM
+- Prisma
