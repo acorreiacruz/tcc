@@ -1,11 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import DomainEvent from "../../domain/event/domainEvent";
 import OutboxRepository from "../../domain/repository/outboxRepository";
+import Outbox from "../../application/outbox";
 
 export default class OrderOutboxRepositoryDatabase implements OutboxRepository {
     private connection: PrismaClient;
 
-    constructor(){
+    constructor() {
         this.connection = new PrismaClient();
     }
 
@@ -20,24 +21,29 @@ export default class OrderOutboxRepositoryDatabase implements OutboxRepository {
 
     async create(event: DomainEvent): Promise<any> {
         await this.connection.orderOutbox.create({
-            data:{
+            data: {
                 orderId: event.entityId,
                 eventId: event.eventId,
                 eventName: event.name,
                 status: "pending",
                 payload: JSON.stringify(event),
-
-            }
+            },
         });
     }
-    async getByStatus(status: string[]): Promise<string[]> {
-        const orderOutboxDatas = await this.connection.orderOutbox.findMany({
+    async getByStatus(status: string[]): Promise<Outbox[]> {
+        const outboxesData = await this.connection.orderOutbox.findMany({
             where: {
-                status: {in: status}
-            }
-        })
-        const eventsList = orderOutboxDatas.map(orderOutboxData => JSON.stringify(orderOutboxData.payload));
-        return eventsList;
+                status: { in: status },
+            },
+        });
+        const orderOutboxes = outboxesData.map((outboxData) => ({
+            id: outboxData.id,
+            eventId: outboxData.eventId,
+            eventName: outboxData.eventName,
+            entityId: outboxData.orderId,
+            status: outboxData.status,
+            payload: outboxData.payload,
+        }));
+        return orderOutboxes;
     }
-
 }
