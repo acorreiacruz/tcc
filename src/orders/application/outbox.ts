@@ -3,6 +3,6 @@ export default interface Outbox {
     eventId: string;
     eventName: string;
     entityId: string;
-    status: "pending" | "published" | "failed";
+    status: string;
     payload: string;
 }
