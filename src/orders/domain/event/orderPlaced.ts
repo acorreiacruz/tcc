@@ -1,55 +1,26 @@
 import Order from "../entity/order";
-import DomainEvent from "./domainEvent";
 import crypto from "crypto";
+import DomainEvent from "./domainEvent";
 
-export default class OrderPlaced implements DomainEvent {
-    public eventId: string;
-    public correlationId: string;
-    public entityId: string;
-    public name: string;
-    public timestamp: Date;
-    public source: string;
-    public payload: Object;
-    private constructor(
-        eventId: string,
-        correlationId: string,
-        entityId: string,
-        timestamp: Date,
-        payload: Object
-    ) {
-        this.eventId = eventId;
-        this.correlationId = correlationId;
-        this.entityId = entityId;
-        this.name = "OrderPlaced";
-        this.timestamp = timestamp;
-        this.source = "OrderService";
-        this.payload = payload;
-    }
-
+export default class OrderPlaced extends DomainEvent {
     static create(order: Order): OrderPlaced {
+        const eventId = crypto.randomUUID();
+        const correlationId = crypto.randomUUID();
+        const timestamp = new Date();
         return new OrderPlaced(
-            crypto.randomUUID(),
-            crypto.randomUUID(),
+            eventId,
             order.getId(),
-            new Date(),
+            correlationId,
+            "OrderPlaced",
+            timestamp,
+            "OrderService",
             {
                 orderId: order.getId(),
+                userId: order.getUserId(),
                 orderItems: order.getOrderItems(),
                 paymentMethod: order.getPaymentMethod(),
                 total: order.getTotal(),
             }
         );
-    }
-
-    toJSON(): Object {
-        return {
-            eventId: this.eventId,
-            correlationId: this.correlationId,
-            entityId: this.entityId,
-            name: this.name,
-            timestamp: this.timestamp,
-            source: this.source,
-            payload: this.payload,
-        };
     }
 }
