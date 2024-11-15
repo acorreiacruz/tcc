@@ -119,6 +119,13 @@ export default class Order {
         this.status = "in_preparation";
     }
 
+    conclude() {
+        if (this.status != "out_for_delivery") throw new Error(
+            "It is impossible set Order status as 'concluded' if is not 'out_for_delivery'"
+        );
+        this.status = "concluded"
+    }
+
     fail() {
         if (this.status != "out_for_delivery")
             throw new Error(
