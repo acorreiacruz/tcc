@@ -146,4 +146,16 @@ describe("Unit testing Order", () => {
             "It is impossible set Order status as 'in_preparation' if is not 'confirmed'"
         );
     });
+
+    test("Must cancel a Order", () => {
+        const order = Order.create(
+            userId,
+            orderDate,
+            fulfillmentMethod,
+            paymentMethod
+        );
+        expect(order.getStatus()).toBe("pending");
+        order.cancel();
+        expect(order.getStatus()).toBe("canceled");
+    });
 });
