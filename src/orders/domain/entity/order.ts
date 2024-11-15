@@ -111,6 +111,14 @@ export default class Order {
         this.status = "confirmed";
     }
 
+    prepare(): void {
+        if (this.status != "confirmed")
+            throw new Error(
+                "It is impossible set Order status as 'in_preparation' if is not 'confirmed'"
+            );
+        this.status = "in_preparation";
+    }
+
     cancel(): void {
         this.status = "canceled";
     }
