@@ -266,4 +266,20 @@ describe("Unit testing Order", () => {
         order.ready();
         expect(order.getStatus()).toBe("ready");
     });
+
+    test("Must not ready a Order that is not 'ready'", () => {
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            "confirmed",
+            fulfillmentMethod,
+            paymentMethod,
+            1000
+        );
+        expect(order.getStatus()).toBe("confirmed");
+        expect(() => order.ready()).toThrow(
+            "It is impossible set Order status as 'ready' if is not 'in_preparation'"
+        );
+    });
 });
