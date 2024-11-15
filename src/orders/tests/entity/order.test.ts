@@ -204,4 +204,20 @@ describe("Unit testing Order", () => {
         order.conclude();
         expect(order.getStatus()).toBe("concluded");
     });
+
+    test("Must not conclude a Order that is not 'out_for_delivery'", () => {
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            "confirmed",
+            fulfillmentMethod,
+            paymentMethod,
+            1000
+        );
+        expect(order.getStatus()).toBe("confirmed");
+        expect(() => order.conclude()).toThrow(
+            "It is impossible set Order status as 'concluded' if is not 'out_for_delivery'"
+        );
+    });
 });
