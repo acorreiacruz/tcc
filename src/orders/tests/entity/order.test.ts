@@ -158,4 +158,19 @@ describe("Unit testing Order", () => {
         order.cancel();
         expect(order.getStatus()).toBe("canceled");
     });
+
+    test("Must fail a Order that is 'out_for_delivery'", () => {
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            "out_for_delivery",
+            fulfillmentMethod,
+            paymentMethod,
+            1000
+        );
+        expect(order.getStatus()).toBe("out_for_delivery");
+        order.fail();
+        expect(order.getStatus()).toBe("failed");
+    });
 });
