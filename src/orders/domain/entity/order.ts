@@ -103,6 +103,13 @@ export default class Order {
         this.total += item.getPrice() * quantity;
     }
 
+    confirm(): void {
+        if (this.status != "pending")
+            throw new Error(
+                "It is impossible set Order status as 'confirmed' if is not 'pending'"
+            );
+        this.status = "confirmed";
+    }
 
     static create(
         userId: string,
