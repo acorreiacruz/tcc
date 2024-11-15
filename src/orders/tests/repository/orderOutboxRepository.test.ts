@@ -36,6 +36,7 @@ describe("Testing OrderOutboxRepository", () => {
 
     afterEach(async () => {
         await connection.order.deleteMany();
+        await connection.orderOutbox.deleteMany();
     });
 
     test("Must create a OrderOutbox record", async () => {
@@ -43,7 +44,6 @@ describe("Testing OrderOutboxRepository", () => {
         const eventsJSONList = await orderOutboxRepository.getByStatus([
             "pending",
         ]);
-        console.log(eventsJSONList);
         expect(eventsJSONList.length).toBe(1);
     });
 });
