@@ -110,7 +110,7 @@ describe("Unit testing Order", () => {
         );
         expect(order.getStatus()).toBe("confirmed");
         expect(() => order.confirm()).toThrow(
-            "You cannot confirm a Order that is not 'pending'"
+            "It is impossible set Order status as 'confirmed' if is not 'pending'"
         );
     });
 
