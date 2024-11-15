@@ -1,5 +1,7 @@
 import Item from "../../domain/entity/item";
 import Order from "../../domain/entity/order";
+import OrderPlaced from "../../domain/event/orderPlaced";
+import OrderUpdated from "../../domain/event/orderUpdated";
 import OrderRepository from "../../domain/repository/orderRepository";
 import OrderRepositoryDatabase from "../../infraestructure/repository/orderRepositoryDatabase";
 import { PrismaClient } from "@prisma/client";
@@ -45,7 +47,7 @@ describe("Testing OrderRepository", () => {
     });
     
     test("Must create a Order and get it by id", async () => {
-        await orderRepository.create(order);
+        await orderRepository.create(order, OrderPlaced.create(order));
         const orderReceived = await orderRepository.getById(order.getId());
         expect(orderReceived).toBeTruthy();
     });
@@ -59,10 +61,10 @@ describe("Testing OrderRepository", () => {
     test("Must update a Order", async () => {
         expect(order.getTotal()).toBe(0);
         expect(order.getOrderItems().length).toBe(0);
-        await orderRepository.create(order);
+        await orderRepository.create(order, OrderPlaced.create(order));
         order.addItem(item1, 3);
         order.addItem(item2, 4);
-        await orderRepository.update(order);
+        await orderRepository.update(order, OrderUpdated.create(order));
         const orderUpdated = await orderRepository.getById(order.getId());
         expect(orderUpdated.getTotal()).toBe(185);
         expect(order.getOrderItems().length).toBe(2);
