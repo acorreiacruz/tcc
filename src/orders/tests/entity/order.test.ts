@@ -81,7 +81,7 @@ describe("Unit testing Order", () => {
                 10
             )
         ).toThrow(
-            "Invalid status value. It only is possible: pending, confirmed, in_preparation, ready, out_for_delivery, concluded, canceled, delivery_failed"
+            "Invalid status value. It only is possible: pending, confirmed, in_preparation, ready, out_for_delivery, concluded, delivery_failed, canceled"
         );
     });
 
