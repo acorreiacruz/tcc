@@ -111,6 +111,10 @@ export default class Order {
         this.status = "confirmed";
     }
 
+    cancel(): void {
+        this.status = "canceled";
+    }
+
     static create(
         userId: string,
         orderDate: Date,
