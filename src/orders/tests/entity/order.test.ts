@@ -113,4 +113,37 @@ describe("Unit testing Order", () => {
             "You cannot confirm a Order that is not 'pending'"
         );
     });
+
+    test("Must prepare a confirmed Order", () => {
+        status = "confirmed";
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            status,
+            fulfillmentMethod,
+            paymentMethod,
+            100
+        );
+        expect(order.getStatus()).toBe("confirmed");
+        order.prepare();
+        expect(order.getStatus()).toBe("in_preparation");
+    });
+
+    test("Must not prepare Order that has not a 'confirmed' status", () => {
+        status = "pending";
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            status,
+            fulfillmentMethod,
+            paymentMethod,
+            100
+        );
+        expect(order.getStatus()).toBe("pending");
+        expect(() => order.prepare()).toThrow(
+            "It is impossible set Order status as 'in_preparation' if is not 'confirmed'"
+        );
+    });
 });
