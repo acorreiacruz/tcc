@@ -173,4 +173,20 @@ describe("Unit testing Order", () => {
         order.fail();
         expect(order.getStatus()).toBe("failed");
     });
+
+    test("Must not fail a Order that is not 'out_for_delivery'", () => {
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            "confirmed",
+            fulfillmentMethod,
+            paymentMethod,
+            1000
+        );
+        expect(order.getStatus()).toBe("confirmed");
+        expect(() => order.fail()).toThrow(
+            "It is impossible set Order status as 'failed' if is not 'out_for_delivery'"
+        );
+    });
 });
