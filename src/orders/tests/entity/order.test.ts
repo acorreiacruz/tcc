@@ -235,4 +235,20 @@ describe("Unit testing Order", () => {
         order.delivery();
         expect(order.getStatus()).toBe("out_for_delivery");
     });
+
+    test("Must not delivery a Order that is not 'ready'", () => {
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            "confirmed",
+            fulfillmentMethod,
+            paymentMethod,
+            1000
+        );
+        expect(order.getStatus()).toBe("confirmed");
+        expect(() => order.delivery()).toThrow(
+            "It is impossible set Order status as 'out_for_delivery' if is not 'ready'"
+        );
+    });
 });
