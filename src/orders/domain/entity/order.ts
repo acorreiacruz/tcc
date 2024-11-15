@@ -119,6 +119,14 @@ export default class Order {
         this.status = "in_preparation";
     }
 
+    ready(): void {
+        if (this.status != "in_preparation")
+            throw new Error(
+                "It is impossible set Order status as 'ready' if is not 'in_preparation'"
+            );
+        this.status = "ready";
+    }
+
     delivery() {
         if (this.status != "ready")
             throw new Error(
@@ -128,10 +136,11 @@ export default class Order {
     }
 
     conclude() {
-        if (this.status != "out_for_delivery") throw new Error(
+        if (this.status != "out_for_delivery")
+            throw new Error(
             "It is impossible set Order status as 'concluded' if is not 'out_for_delivery'"
         );
-        this.status = "concluded"
+        this.status = "concluded";
     }
 
     fail() {
