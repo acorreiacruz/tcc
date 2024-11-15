@@ -138,8 +138,8 @@ export default class Order {
     conclude() {
         if (this.status != "out_for_delivery")
             throw new Error(
-            "It is impossible set Order status as 'concluded' if is not 'out_for_delivery'"
-        );
+                "It is impossible set Order status as 'concluded' if is not 'out_for_delivery'"
+            );
         this.status = "concluded";
     }
 
@@ -170,10 +170,6 @@ export default class Order {
             paymentMethod,
             0
         );
-    }
-
-    fail() {
-        this.status = "failed";
     }
 
     static restore(
@@ -217,8 +213,8 @@ enum Status {
     Ready = "ready",
     OutForDelivery = "out_for_delivery",
     Concluded = "concluded",
-    Canceled = "canceled",
     DeliveryFailed = "delivery_failed",
+    Canceled = "canceled",
 }
 
 enum FulfillmentMethod {
