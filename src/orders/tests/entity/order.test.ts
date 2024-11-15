@@ -189,4 +189,19 @@ describe("Unit testing Order", () => {
             "It is impossible set Order status as 'failed' if is not 'out_for_delivery'"
         );
     });
+
+    test("Must conclude a Order that is 'out_for_delivery'", () => {
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            "out_for_delivery",
+            fulfillmentMethod,
+            paymentMethod,
+            1000
+        );
+        expect(order.getStatus()).toBe("out_for_delivery");
+        order.conclude();
+        expect(order.getStatus()).toBe("concluded");
+    });
 });
