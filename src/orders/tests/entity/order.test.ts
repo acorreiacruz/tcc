@@ -251,4 +251,19 @@ describe("Unit testing Order", () => {
             "It is impossible set Order status as 'out_for_delivery' if is not 'ready'"
         );
     });
+
+    test("Must ready a Order that is 'in_preparation'", () => {
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            "in_preparation",
+            fulfillmentMethod,
+            paymentMethod,
+            1000
+        );
+        expect(order.getStatus()).toBe("in_preparation");
+        order.ready();
+        expect(order.getStatus()).toBe("ready");
+    });
 });
