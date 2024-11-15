@@ -119,6 +119,14 @@ export default class Order {
         this.status = "in_preparation";
     }
 
+    fail() {
+        if (this.status != "out_for_delivery")
+            throw new Error(
+                "It is impossible set Order status as 'failed' if is not 'out_for_delivery'"
+            );
+        this.status = "failed";
+    }
+
     cancel(): void {
         this.status = "canceled";
     }
