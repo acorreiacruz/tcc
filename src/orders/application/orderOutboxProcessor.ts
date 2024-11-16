@@ -72,4 +72,12 @@ export default class OrderOutboxProcessor {
         }
         await this.outboxRepository.update(publishedOutboxes);
     }
+
+    async removePublhishedOutboxes(): Promise<void> {
+        const publhishedOrderOutboxes: Outbox[] =
+            await this.outboxRepository.getByStatus(["published"]);
+        console.log("Published: ", publhishedOrderOutboxes.length);
+        if (publhishedOrderOutboxes.length === 0) return;
+        await this.outboxRepository.delete(publhishedOrderOutboxes);
+    }
 }
