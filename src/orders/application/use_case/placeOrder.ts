@@ -33,7 +33,7 @@ export default class PlaceOrder {
         await this.orderRepository.create(order, orderPlaced);
         return {
             orderId: order.getId(),
-            status: "pending"
+            status: "on_process"
         }
     }
 }
