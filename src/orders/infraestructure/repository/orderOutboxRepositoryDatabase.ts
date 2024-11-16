@@ -11,11 +11,14 @@ export default class OrderOutboxRepositoryDatabase implements OutboxRepository {
     }
 
     async update(outboxes: Outbox[]): Promise<void> {
-        this.connection.orderOutbox.updateMany({
+        const outboxIds = outboxes.map(outbox => outbox.id);
+        await this.connection.orderOutbox.updateMany({
             where: {
-                id: { in: outboxes.map((outbox) => outbox.id) },
+                id: { in: outboxIds },
             },
-            data: outboxes,
+            data: {
+                status: outboxes[0].status
+            }
         });
     }
 
