@@ -6,4 +6,5 @@ export default interface MessageBroker {
         routingKey: string
     ): Promise<string>;
     consume(queue: string, callback: Function): Promise<void>;
+    close(): Promise<void>;
 }
