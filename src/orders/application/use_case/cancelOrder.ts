@@ -1,5 +1,5 @@
 import Order from "../../domain/entity/order";
-import OrderCanceled from "../../domain/event/orderCanceled";
+import OrderStatusUpdated from "../../domain/event/orderStatusUpdated";
 import OrderRepository from "../../domain/repository/orderRepository";
 
 export default class CancelOrder {
@@ -17,7 +17,7 @@ export default class CancelOrder {
                 "The logged user cannot cancel another user's order"
             );
         order.cancel();
-        const orderCanceled = OrderCanceled.create(order);
+        const orderCanceled = OrderStatusUpdated.create(order, "OrderCanceled");
         this.orderRepository.update(order, orderCanceled);
         return { status: "on_process" };
     }
