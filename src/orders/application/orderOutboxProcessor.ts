@@ -47,3 +47,29 @@ export default class OrderOutboxProcessor {
             ],
         ]);
     }
+    async publishPendingOutboxes(): Promise<void> {
+        const pendingOrderOutboxes: Outbox[] =
+            await this.outboxRepository.getByStatus(["pending"]);
+        if (pendingOrderOutboxes.length === 0) return;
+        const publishedOutboxes: Outbox[] = [];
+        for (const orderOutbox of pendingOrderOutboxes) {
+            const destinationInformation = this.destinationQueues.get(
+                orderOutbox.eventName
+            );
+            if (!destinationInformation)
+                throw new Error(
+                    `There is no destination information associated with the event: ${orderOutbox.eventName}`
+                );
+            const result = await this.messageBroker.publish(
+                orderOutbox.payload,
+                destinationInformation.exchange,
+                destinationInformation.routingKey
+            );
+            if (result === "published") {
+                orderOutbox.status = "published";
+                publishedOutboxes.push(orderOutbox);
+            }
+        }
+        await this.outboxRepository.update(publishedOutboxes);
+    }
+}
