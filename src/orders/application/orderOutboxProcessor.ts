@@ -1,3 +1,6 @@
+import OutboxRepository from "../domain/repository/outboxRepository";
+import MessageBroker from "../infraestructure/messageBroker";
+import Outbox from "./outbox";
 import {
     ORDER_PLACED_EXCHANGE,
     ORDER_PLACED_ROUTING_KEY,
@@ -6,6 +9,20 @@ import {
     ORDER_UPDATED_EXCHANGE,
     ORDER_UPDATED_ROUTING_KEY,
 } from "../settings/credentials";
+
+export default class OrderOutboxProcessor {
+    private messageBroker: MessageBroker;
+    private destinationQueues: Map<
+        string,
+        { exchange: string; routingKey: string }
+    >;
+    private outboxRepository: OutboxRepository;
+    constructor(
+        messageBroker: MessageBroker,
+        outboxRepository: OutboxRepository
+    ) {
+        this.messageBroker = messageBroker;
+        this.outboxRepository = outboxRepository;
         this.destinationQueues = new Map([
             [
                 "OrderPlaced",
@@ -29,3 +46,4 @@ import {
                 },
             ],
         ]);
+    }
