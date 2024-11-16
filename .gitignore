@@ -6,6 +6,6 @@ coverage/
 *.config.ts
 *.json
 .env
-prisma/migrations/
+**/orm/prisma/migrations/
 prisma/**.db
 prisma/**.db-journal
