@@ -48,17 +48,23 @@ Relação dos eventos gerados e escutados por cada um dos microsserviços, além
   - OrderCanceled
   - OrderUpdated
   - OrderConfirmed
+- Escutados:
+  - StockReserved
+  - StockConfirmed
+  - PaymentConfirmed
+  - PaymentRefunded
+  - DeliveryCreated
+  - DeliveryFailed
+  - DeliveryConcluded
 
 ##### Delivery
 
 - Gerados:
-  - OrderBeingPrepared
-  - OrderReadyForDelivery
-  - OrderOutForDelivery
+  - DeliveryCreated
   - DeliveryFailed
-  - DeliveryConfirmed
+  - DeliveryConcluded
 - Escutados:
-  - StockPrepared
+  - OrderPrepared
 
 ##### Stock
 
@@ -71,7 +77,7 @@ Relação dos eventos gerados e escutados por cada um dos microsserviços, além
   - OrderPlaced
   - OrderUpdated
   - OrderCanceled
-  - PaymentConfirmed
+  - OrderConfirmed
 
 ##### Payment
 
