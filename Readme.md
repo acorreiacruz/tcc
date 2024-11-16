@@ -89,6 +89,22 @@ Relação dos eventos gerados e escutados por cada um dos microsserviços, além
   - StockReserved
   - StockReleased
 
+#### SAGAS - Coreografadas
+
+Abaixo temos os diagramas demonstrando as sagas coreografadas utilizadas no projeto.
+
+##### OrderPlaced
+
+![alt text](orderPlaced.png)
+
+##### OrderCanceled
+
+![alt text](orderCanceled.png)
+
+##### DeliveryConcluded e DeliveryFailed
+
+![alt text](delivery.png)
+
 ### Tecnologias Utilizadas
 
 - Docker
