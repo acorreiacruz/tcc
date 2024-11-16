@@ -9,6 +9,16 @@ export default class OrderOutboxRepositoryDatabase implements OutboxRepository {
     constructor() {
         this.connection = new PrismaClient();
     }
+    
+    async delete(outboxes: Outbox[]): Promise<void> {
+        const outboxIds = outboxes.map(outbox => outbox.id);
+        await this.connection.orderOutbox.deleteMany({
+            where: {
+                id: {in: outboxIds},
+                status: outboxes[0].status
+            }
+        });
+    }
 
     async update(outboxes: Outbox[]): Promise<void> {
         const outboxIds = outboxes.map(outbox => outbox.id);
