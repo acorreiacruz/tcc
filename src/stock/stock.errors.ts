@@ -24,3 +24,11 @@ export class InsufficientStockForReservationError extends Error {
         this.name = "InsufficientStockForReservationError";
     }
 }
+
+export class InvalidStockReservationQuantityError extends Error {
+    constructor() {
+        super("The quantity to be reserved must be greater than zero");
+        this.name = "InvalidStockReservationQuantityError";
+    }
+}
+
