@@ -40,3 +40,12 @@ export class InvalidStockConfirmationQuantityError extends Error {
         this.name = "InvalidStockConfirmationQuantityError";
     }
 }
+
+export class ExcessiveStockConfirmationError extends Error {
+    constructor() {
+        super(
+            "The stock confirmation quantity cannot be greater than the total stock quantity or the reserved quantity"
+        );
+        this.name = "ExcessiveStockConfirmationError";
+    }
+}
