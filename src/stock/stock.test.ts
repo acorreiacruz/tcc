@@ -3,6 +3,7 @@ import {
     ExcessiveStockConfirmationError,
     InsufficientStockForReservationError,
     InvalidStockConfirmationQuantityError,
+    InvalidStockReleaseQuantityError,
     InvalidStockReservationQuantityError,
     NegativeStockError,
     ReservedStockExceedsTotalError,
@@ -138,4 +139,21 @@ describe("Testing Stock", () => {
         }
     );
 
+    test.each([
+        [-1, false, InvalidStockReleaseQuantityError],
+        [0, false, InvalidStockReleaseQuantityError],
+    ])(
+        "Must not release a quantity in Stock that is less than or equal to zero",
+        (quantity, hadBeenConfirmed, error) => {
+            stock = Stock.restore(
+                stockId,
+                itemId,
+                totalQuantity,
+                reservedQuantity
+            );
+            expect(() => stock.release(quantity, hadBeenConfirmed)).toThrow(
+                error
+            );
+        }
+    );
 });
