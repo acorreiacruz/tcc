@@ -1,6 +1,8 @@
 import crypto from "crypto";
 import {
+    ExcessiveStockConfirmationError,
     InsufficientStockForReservationError,
+    InvalidStockConfirmationQuantityError,
     InvalidStockReservationQuantityError,
     NegativeStockError,
     ReservedStockExceedsTotalError,
@@ -39,6 +41,8 @@ export default class Stock {
 
     confirm(quantity: number): void {
         if (quantity <= 0) throw new InvalidStockConfirmationQuantityError();
+        if (quantity > this.reservedQuantity || quantity > this.totalQuantity)
+            throw new ExcessiveStockConfirmationError();
         this.totalQuantity -= quantity;
         this.reservedQuantity -= quantity;
     }
