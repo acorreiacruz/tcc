@@ -119,4 +119,23 @@ describe("Testing Stock", () => {
             expect(() => stock.confirm(quantity)).toThrow(result);
         }
     );
+
+    test.each([
+        [50, false, 250, 50],
+        [50, true, 300, 50],
+    ])(
+        "Must release a quantity in Stock",
+        (quantity, hadBeenConfirmed, total, reserved) => {
+            stock = Stock.restore(
+                stockId,
+                itemId,
+                totalQuantity,
+                reservedQuantity
+            );
+            stock.release(quantity, hadBeenConfirmed);
+            expect(stock.getTotalQuantity()).toBe(total);
+            expect(stock.getReservedQuantity()).toBe(reserved);
+        }
+    );
+
 });
