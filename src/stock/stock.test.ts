@@ -30,4 +30,11 @@ describe("Testing Stock", () => {
         );
     });
 
+    test("Must not create a Stock with reservedQuantity less than zero", () => {
+        reservedQuantity = -150;
+        expect(() =>
+            Stock.restore(stockId, itemId, totalQuantity, reservedQuantity)
+        ).toThrow(new NegativeStockError("reservedQuantity"));
+    });
+
     });
