@@ -87,21 +87,26 @@ describe("Testing Stock", () => {
         );
     });
 
-    test("Must not confirm a negative or zero quantity of items in Stock", () => {
-        quantityToConfirm = -1;
-        stock = Stock.restore(stockId, itemId, totalQuantity, reservedQuantity);
-        expect(() => stock.confirm(quantityToConfirm)).toThrow(
-            InvalidStockConfirmationQuantityError
-        );
-        quantityToConfirm = 0;
-        expect(() => stock.confirm(quantityToConfirm)).toThrow(
-            InvalidStockConfirmationQuantityError
-        );
-    });
+    test.each([
+        [-1, InvalidStockConfirmationQuantityError],
+        [0, InvalidStockConfirmationQuantityError],
+    ])(
+        "Must not confirm a negative or zero quantity of items in Stock",
+        (quantity, result) => {
+            stock = Stock.restore(
+                stockId,
+                itemId,
+                totalQuantity,
+                reservedQuantity
+            );
+            expect(() => stock.confirm(quantity)).toThrow(result);
+            expect(() => stock.confirm(quantity)).toThrow(result);
+        }
+    );
 
     test.each([
-        [110,ExcessiveStockConfirmationError],
-        [260,ExcessiveStockConfirmationError],
+        [110, ExcessiveStockConfirmationError],
+        [260, ExcessiveStockConfirmationError],
     ])(
         "Must not confirm a quantity that is greater than the total quantity or greater than the quantity reserved in Stock",
         (quantity, result) => {
