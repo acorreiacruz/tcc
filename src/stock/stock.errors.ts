@@ -49,3 +49,12 @@ export class ExcessiveStockConfirmationError extends Error {
         this.name = "ExcessiveStockConfirmationError";
     }
 }
+
+export class InvalidStockReleaseQuantityError extends Error {
+    constructor() {
+        super(
+            "The quantity to be released in stock must be greater than zero"
+        );
+        this.name = "InvalidStockReleaseQuantityError";
+    }
+}
