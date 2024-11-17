@@ -1,4 +1,4 @@
-import Stock from "./stock";
+import Stock from "./domain/entity/stock";
 import {
     ExcessiveStockConfirmationError,
     InsufficientStockForReservationError,
@@ -7,7 +7,7 @@ import {
     InvalidStockReservationQuantityError,
     NegativeStockError,
     ReservedStockExceedsTotalError,
-} from "./stock.errors";
+} from "./domain/entity/stock.errors";
 
 let itemId = "7043c7e6-0da2-4fa7-ab6e-a966428f7cb4";
 let stockId = "f20f5264-8a7f-4098-a832-bfa9df6ce8c8";
