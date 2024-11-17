@@ -7,3 +7,12 @@ export class NegativeStockError extends Error {
     }
 }
 
+export class ReservedStockExceedsTotalError extends Error {
+    constructor() {
+        super(
+            `The reserved stock quantity cannot exceed the total stock quantity. Ensure the reserved quantity is less than or equal to the total available stock`
+        );
+        this.name = "ReservedStockExceedsTotalError";
+    }
+}
+
