@@ -38,6 +38,7 @@ export default class Stock {
     }
 
     confirm(quantity: number): void {
+        if (quantity <= 0) throw new InvalidStockConfirmationQuantityError();
         this.totalQuantity -= quantity;
         this.reservedQuantity -= quantity;
     }
