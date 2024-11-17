@@ -45,4 +45,13 @@ describe("Testing Stock", () => {
             Stock.restore(stockId, itemId, totalQuantity, reservedQuantity)
         ).toThrow(ReservedStockExceedsTotalError);
     });
+
+    test("Must reserve a number of items in Stock", () => {
+        const quantityToBeReserved = 10;
+        expect(stock.getReservedQuantity()).toBe(0);
+        expect(stock.getTotalQuantity()).toBe(totalQuantity);
+        stock.reserve(quantityToBeReserved);
+        expect(stock.getReservedQuantity()).toBe(quantityToBeReserved);
+        expect(stock.getTotalQuantity()).toBe(totalQuantity);
+    });
     });
