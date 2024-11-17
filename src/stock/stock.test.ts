@@ -12,12 +12,14 @@ let stock: Stock;
 let totalQuantity: number;
 let reservedQuantity: number;
 let quantityToBeReserved: number;
+let quantityToConfirm: number;
 
 describe("Testing Stock", () => {
     beforeEach(() => {
         totalQuantity = 250;
         reservedQuantity = 100;
         quantityToBeReserved = 10;
+        quantityToConfirm = 20;
         stock = Stock.create(itemId, totalQuantity);
     });
     test("Must create a Stock", () => {
@@ -49,7 +51,7 @@ describe("Testing Stock", () => {
     });
 
     test("Must reserve a number of items in Stock", () => {
-        const quantityToBeReserved = 10;
+        quantityToBeReserved = 10;
         expect(stock.getReservedQuantity()).toBe(0);
         expect(stock.getTotalQuantity()).toBe(totalQuantity);
         stock.reserve(quantityToBeReserved);
@@ -58,17 +60,24 @@ describe("Testing Stock", () => {
     });
 
     test("Must not reserve a negative number of items in Stock", () => {
-        const quantityToBeReserved = -10;
+        quantityToBeReserved = -10;
         expect(() => stock.reserve(quantityToBeReserved)).toThrow(
             InvalidStockReservationQuantityError
         );
     });
 
     test("Must not reserve items in Stock when the theoretical quantity available is insufficient", () => {
-        const quantityToBeReserved = 160;
+        quantityToBeReserved = 160;
         stock = Stock.restore(stockId, itemId, totalQuantity, reservedQuantity);
         expect(() => stock.reserve(quantityToBeReserved)).toThrow(
             InsufficientStockForReservationError
         );
     });
+
+    test("Must confirm a reserved quantity of items in Stock", () => {
+        stock = Stock.restore(stockId, itemId, totalQuantity, reservedQuantity);
+        stock.confirm(quantityToConfirm);
+        expect(stock.getReservedQuantity()).toBe(reservedQuantity - quantityToConfirm);
+        expect(stock.getTotalQuantity()).toBe(totalQuantity - quantityToConfirm);
     });
+});
