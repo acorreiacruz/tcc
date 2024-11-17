@@ -3,11 +3,11 @@ import {
     ExcessiveStockConfirmationError,
     InsufficientStockForReservationError,
     InvalidStockConfirmationQuantityError,
+    InvalidStockReleaseQuantityError,
     InvalidStockReservationQuantityError,
     NegativeStockError,
     ReservedStockExceedsTotalError,
 } from "./stock.errors";
-
 
 export default class Stock {
     private stockId: string;
@@ -40,8 +40,9 @@ export default class Stock {
     }
 
     release(quantity: number, hadBeenConfirmed: boolean): void {
+        if (quantity <= 0) throw new InvalidStockReleaseQuantityError();
         this.reservedQuantity -= quantity;
-        if(hadBeenConfirmed) this.totalQuantity += quantity
+        if (hadBeenConfirmed) this.totalQuantity += quantity;
     }
 
     confirm(quantity: number): void {
