@@ -1,5 +1,6 @@
 import Stock from "./stock";
 import {
+    ExcessiveStockConfirmationError,
     InsufficientStockForReservationError,
     InvalidStockConfirmationQuantityError,
     InvalidStockReservationQuantityError,
@@ -78,8 +79,12 @@ describe("Testing Stock", () => {
     test("Must confirm a reserved quantity of items in Stock", () => {
         stock = Stock.restore(stockId, itemId, totalQuantity, reservedQuantity);
         stock.confirm(quantityToConfirm);
-        expect(stock.getReservedQuantity()).toBe(reservedQuantity - quantityToConfirm);
-        expect(stock.getTotalQuantity()).toBe(totalQuantity - quantityToConfirm);
+        expect(stock.getReservedQuantity()).toBe(
+            reservedQuantity - quantityToConfirm
+        );
+        expect(stock.getTotalQuantity()).toBe(
+            totalQuantity - quantityToConfirm
+        );
     });
 
     test("Must not confirm a negative or zero quantity of items in Stock", () => {
@@ -93,4 +98,20 @@ describe("Testing Stock", () => {
             InvalidStockConfirmationQuantityError
         );
     });
+
+    test.each([
+        [110,ExcessiveStockConfirmationError],
+        [260,ExcessiveStockConfirmationError],
+    ])(
+        "Must not confirm a quantity that is greater than the total quantity or greater than the quantity reserved in Stock",
+        (quantity, result) => {
+            stock = Stock.restore(
+                stockId,
+                itemId,
+                totalQuantity,
+                reservedQuantity
+            );
+            expect(() => stock.confirm(quantity)).toThrow(result);
+        }
+    );
 });
