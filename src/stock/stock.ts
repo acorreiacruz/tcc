@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import {
+    InvalidStockReservationQuantityError,
     NegativeStockError,
     ReservedStockExceedsTotalError,
 } from "./stock.errors";
@@ -28,6 +29,7 @@ export default class Stock {
     }
 
     reserve(quantity: number): void {
+        if (quantity <= 0) throw new InvalidStockReservationQuantityError();
         this.reservedQuantity += quantity;
     }
 
