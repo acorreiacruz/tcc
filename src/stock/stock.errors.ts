@@ -16,3 +16,11 @@ export class ReservedStockExceedsTotalError extends Error {
     }
 }
 
+export class InsufficientStockForReservationError extends Error {
+    constructor() {
+        super(
+            `Unable to reserve stock for the item. Insufficient quantity available to fulfill the reservation request`
+        );
+        this.name = "InsufficientStockForReservationError";
+    }
+}
