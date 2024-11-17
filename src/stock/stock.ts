@@ -39,6 +39,11 @@ export default class Stock {
         this.reservedQuantity += quantity;
     }
 
+    release(quantity: number, hadBeenConfirmed: boolean): void {
+        this.reservedQuantity -= quantity;
+        if(hadBeenConfirmed) this.totalQuantity += quantity
+    }
+
     confirm(quantity: number): void {
         if (quantity <= 0) throw new InvalidStockConfirmationQuantityError();
         if (quantity > this.reservedQuantity || quantity > this.totalQuantity)
