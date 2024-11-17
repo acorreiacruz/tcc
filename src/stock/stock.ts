@@ -37,6 +37,11 @@ export default class Stock {
         this.reservedQuantity += quantity;
     }
 
+    confirm(quantity: number): void {
+        this.totalQuantity -= quantity;
+        this.reservedQuantity -= quantity;
+    }
+
     getItemId(): string {
         return this.itemId;
     }
