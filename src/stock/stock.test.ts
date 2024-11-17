@@ -1,6 +1,7 @@
 import Stock from "./stock";
 import {
     NegativeStockError,
+    ReservedStockExceedsTotalError,
 } from "./stock.errors";
 
 let itemId = "7043c7e6-0da2-4fa7-ab6e-a966428f7cb4";
@@ -37,4 +38,11 @@ describe("Testing Stock", () => {
         ).toThrow(new NegativeStockError("reservedQuantity"));
     });
 
+    test("Must not create a Stock with reservedQuantity greater than totalQuantity", () => {
+        reservedQuantity = 150;
+        totalQuantity = 60;
+        expect(() =>
+            Stock.restore(stockId, itemId, totalQuantity, reservedQuantity)
+        ).toThrow(ReservedStockExceedsTotalError);
+    });
     });
