@@ -1,5 +1,6 @@
 import Stock from "./stock";
 import {
+    InsufficientStockForReservationError,
     InvalidStockReservationQuantityError,
     NegativeStockError,
     ReservedStockExceedsTotalError,
@@ -60,6 +61,14 @@ describe("Testing Stock", () => {
         const quantityToBeReserved = -10;
         expect(() => stock.reserve(quantityToBeReserved)).toThrow(
             InvalidStockReservationQuantityError
+        );
+    });
+
+    test("Must not reserve items in Stock when the theoretical quantity available is insufficient", () => {
+        const quantityToBeReserved = 160;
+        stock = Stock.restore(stockId, itemId, totalQuantity, reservedQuantity);
+        expect(() => stock.reserve(quantityToBeReserved)).toThrow(
+            InsufficientStockForReservationError
         );
     });
     });
