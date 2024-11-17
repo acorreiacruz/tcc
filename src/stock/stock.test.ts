@@ -1,6 +1,7 @@
 import Stock from "./stock";
 import {
     InsufficientStockForReservationError,
+    InvalidStockConfirmationQuantityError,
     InvalidStockReservationQuantityError,
     NegativeStockError,
     ReservedStockExceedsTotalError,
@@ -79,5 +80,17 @@ describe("Testing Stock", () => {
         stock.confirm(quantityToConfirm);
         expect(stock.getReservedQuantity()).toBe(reservedQuantity - quantityToConfirm);
         expect(stock.getTotalQuantity()).toBe(totalQuantity - quantityToConfirm);
+    });
+
+    test("Must not confirm a negative or zero quantity of items in Stock", () => {
+        quantityToConfirm = -1;
+        stock = Stock.restore(stockId, itemId, totalQuantity, reservedQuantity);
+        expect(() => stock.confirm(quantityToConfirm)).toThrow(
+            InvalidStockConfirmationQuantityError
+        );
+        quantityToConfirm = 0;
+        expect(() => stock.confirm(quantityToConfirm)).toThrow(
+            InvalidStockConfirmationQuantityError
+        );
     });
 });
