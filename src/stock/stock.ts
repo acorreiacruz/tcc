@@ -1,4 +1,8 @@
 import crypto from "crypto";
+import {
+    NegativeStockError,
+} from "./stock.errors";
+
 
 export default class Stock {
     private stockId: string;
@@ -11,6 +15,7 @@ export default class Stock {
         totalQuantity: number,
         reservedQuantity: number
     ) {
+        if (totalQuantity < 0) throw new NegativeStockError("totalQuantity");
         this.stockId = stockId;
         this.itemId = itemId;
         this.totalQuantity = totalQuantity;
