@@ -59,4 +59,12 @@ export default class Stock {
         return new Stock(stockId, itemId, totalQuantity, reservedQuantity);
     }
 
+    static restore(
+        stockId: string,
+        itemId: string,
+        totalQuantity: number,
+        reservedQuantity: number
+    ): Stock {
+        return new Stock(stockId, itemId, totalQuantity, reservedQuantity);
+    }
 }
