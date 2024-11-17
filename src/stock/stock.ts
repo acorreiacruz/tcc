@@ -16,6 +16,8 @@ export default class Stock {
         reservedQuantity: number
     ) {
         if (totalQuantity < 0) throw new NegativeStockError("totalQuantity");
+        if (reservedQuantity < 0)
+            throw new NegativeStockError("reservedQuantity");
         this.stockId = stockId;
         this.itemId = itemId;
         this.totalQuantity = totalQuantity;
