@@ -32,3 +32,11 @@ export class InvalidStockReservationQuantityError extends Error {
     }
 }
 
+export class InvalidStockConfirmationQuantityError extends Error {
+    constructor() {
+        super(
+            "The quantity to be confirmed in stock must be greater than zero"
+        );
+        this.name = "InvalidStockConfirmationQuantityError";
+    }
+}
