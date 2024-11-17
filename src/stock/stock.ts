@@ -27,6 +27,10 @@ export default class Stock {
         this.reservedQuantity = reservedQuantity;
     }
 
+    reserve(quantity: number): void {
+        this.reservedQuantity += quantity;
+    }
+
     getItemId(): string {
         return this.itemId;
     }
