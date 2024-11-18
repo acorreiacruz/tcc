@@ -9,7 +9,6 @@ export default class OrderPlaced extends DomainEvent {
         const timestamp = new Date();
         return new OrderPlaced(
             eventId,
-            order.getId(),
             correlationId,
             "OrderPlaced",
             timestamp,
