@@ -2,6 +2,8 @@ import Stock from "../../domain/entity/stock";
 import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
 import StockRepository from "../../infraestructure/repository/stockRepository";
 import StockRepositoryDataBase from "../../infraestructure/repository/stockRepositoryDatabase";
+import DomainEvent from "../../../common/domainEvent";
+
 const connection: PrismaClient = new PrismaClient();
 const stockRepository: StockRepository = new StockRepositoryDataBase();
 const stock1 = Stock.restore(
@@ -16,6 +18,20 @@ const stock2 = Stock.restore(
     500,
     10
 );
+
+class DomainEventMock extends DomainEvent {
+    constructor() {
+        super(
+            "2170aa2b-21e0-41c8-a97d-f13b391ba328",
+            "250beb0f-954d-4d4c-aeff-d4e0289d005d",
+            "DomainEventMock",
+            new Date(),
+            "Mock",
+            {}
+        );
+    }
+}
+
 describe("Testing StockRepository", () => {
     beforeAll(async () => {
         await connection.stock.createMany({
@@ -37,4 +53,16 @@ describe("Testing StockRepository", () => {
         expect(stockIds.includes(stock1.getId())).toBeTruthy();
         expect(stockIds.includes(stock2.getId())).toBeTruthy();
     });
+
+    test("Must upate a Stock", async () => {
+        const domainEventMock = new DomainEventMock();
+        await stockRepository.update([stock1], domainEventMock);
+        const [stockUpdated] = await stockRepository.getByItemIds([
+            stock1.getItemId(),
+        ]);
+        expect(stockUpdated.getReservedQuantity()).toBe(
+            stock1.getReservedQuantity()
+        );
+        expect(stockUpdated.getTotalQuantity()).toBe(stock1.getTotalQuantity());
     });
+});
