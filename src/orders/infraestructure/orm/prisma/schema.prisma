@@ -1,10 +1,11 @@
 generator client {
   provider = "prisma-client-js"
+  output = env("ORDER_PRISMA_CLIENT")
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRES_URL")
+  url      = env("ORDER_POSTGRES_URL")
 }
 
 model Order {
