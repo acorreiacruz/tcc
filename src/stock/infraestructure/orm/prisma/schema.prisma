@@ -11,10 +11,8 @@ datasource db {
 model Stock {
   stockId          String @id @map("id") @db.Uuid
   itemId           String @map("item_id") @db.Uuid
-  quantity         Int
   totalQuantity    Int    @map("total_quantity")
   reservedQuantity Int    @map("reserved_quantity")
-
   @@map("stock")
 }
 
