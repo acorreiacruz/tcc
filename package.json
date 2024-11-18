@@ -4,28 +4,37 @@
   "description": "Implementation of the base project for my course conclusion work",
   "main": "main.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "start-order": "nodemon --watch src/orders/main.ts --exec ts-node src/orders/main.ts",
+    "run-order-outbox": "nodemon --watch src/orders/*.ts --exec ts-node src/orders/orderOutbox.ts",
+    "migrate:order": "npx prisma migrate dev --schema=./src/orders/infraestructure/orm/prisma/schema.prisma --name",
+    "migrate:stock": "npx prisma migrate dev --schema=./src/stock/infraestructure/orm/prisma/schema.prisma --name",
+    "migrate:delivery": "npx prisma migrate dev --schema=./src/delivery/infraestructure/orm/prisma/schema.prisma --name",
+    "prisma-client": "npx prisma generate"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@prisma/client": "^5.22.0",
+    "@swc/core": "^1.9.2",
+    "@swc/jest": "^0.2.37",
     "@types/amqplib": "^0.10.5",
+    "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "amqplib": "^0.10.4",
     "dotenv": "^16.4.5",
-    "jest": "^29.7.0",
+    "express": "^4.21.1",
+    "nodemon": "^3.1.7",
     "prisma": "^5.22.0",
-    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
   "dependencies": {
-    "@types/express": "^5.0.0",
-    "express": "^4.21.1",
-    "geolib": "^3.3.4",
+    "@types/bull": "^4.10.4",
+    "bull": "^4.16.4",
+    "jest": "^29.7.0",
     "pg": "^8.13.1",
-    "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.20"
+    "redis": "^4.7.0",
+    "reflect-metadata": "^0.2.2"
   }
 }
