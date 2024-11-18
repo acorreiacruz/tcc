@@ -1,6 +1,6 @@
-import OutboxRepository from "../domain/repository/outboxRepository";
-import MessageBroker from "../infraestructure/messageBroker";
-import Outbox from "./outbox";
+import OutboxRepository from "../infraestructure/repository/outboxRepository";
+import MessageBroker from "../../common/messageBroker";
+import Outbox from "../../common/outbox";
 import {
     ORDER_PLACED_EXCHANGE,
     ORDER_PLACED_ROUTING_KEY,
