@@ -2,6 +2,8 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
+export const ORDER_API_PORT = Number.parseInt(process.env.ORDER_API_PORT || "8800");
+
 export const RABBITMQ_AMQP_PORT = process.env.RABBITMQ_AMQP_PORT || "invalid";
 export const RABBITMQ_USERNAME = process.env.RABBITMQ_USERNAME || "invalid";
 export const RABBITMQ_PASSWORD = process.env.RABBITMQ_PASSWORD || "invalid";
