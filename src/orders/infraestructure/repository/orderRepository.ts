@@ -1,5 +1,5 @@
-import Order from "../entity/order";
-import DomainEvent from "../event/domainEvent";
+import Order from "../../domain/entity/order";
+import DomainEvent from "../../../common/domainEvent";
 
 export default interface OrderRepository {
     getById(orderId: string): Promise<Order>;
