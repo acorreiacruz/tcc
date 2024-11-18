@@ -1,6 +1,5 @@
 export default abstract class DomainEvent {
     eventId: string;
-    entityId: string;
     correlationId: string;
     name: string;
     timestamp: Date;
@@ -9,7 +8,6 @@ export default abstract class DomainEvent {
 
     protected constructor(
         eventId: string,
-        entityId: string,
         correlationId: string,
         name: string,
         timestamp: Date,
@@ -17,7 +15,6 @@ export default abstract class DomainEvent {
         payload: Object
     ) {
         this.eventId = eventId;
-        this.entityId = entityId;
         this.correlationId = correlationId;
         this.name = name;
         this.source = source;
@@ -29,7 +26,6 @@ export default abstract class DomainEvent {
         return {
             eventId: this.eventId,
             correlationId: this.correlationId,
-            entityId: this.entityId,
             name: this.name,
             timestamp: this.timestamp,
             source: this.source,
