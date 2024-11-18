@@ -1,6 +1,6 @@
 import Order from "../../domain/entity/order";
 import OrderStatusUpdated from "../../domain/event/orderStatusUpdated";
-import OrderRepository from "../../domain/repository/orderRepository";
+import OrderRepository from "../../infraestructure/repository/orderRepository";
 
 export default class CancelOrder {
     private orderRepository: OrderRepository;
