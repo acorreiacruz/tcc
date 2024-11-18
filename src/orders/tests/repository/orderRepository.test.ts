@@ -1,10 +1,10 @@
 import Item from "../../domain/entity/item";
 import Order from "../../domain/entity/order";
 import OrderPlaced from "../../domain/event/orderPlaced";
-import OrderUpdated from "../../domain/event/orderUpdated";
-import OrderRepository from "../../domain/repository/orderRepository";
+import OrderUpdated from "../../domain/event/orderStatusUpdated";
+import OrderRepository from "../../infraestructure/repository/orderRepository";
 import OrderRepositoryDatabase from "../../infraestructure/repository/orderRepositoryDatabase";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
 
 let orderRepository: OrderRepository = new OrderRepositoryDatabase();
 let client: PrismaClient = new PrismaClient();
@@ -45,7 +45,7 @@ describe("Testing OrderRepository", () => {
     afterEach(async () => {
         await client.item.deleteMany();
     });
-    
+
     test("Must create a Order and get it by id", async () => {
         await orderRepository.create(order, OrderPlaced.create(order));
         const orderReceived = await orderRepository.getById(order.getId());
@@ -53,9 +53,9 @@ describe("Testing OrderRepository", () => {
     });
 
     test("Must throw a error when there is no Order with specific id", async () => {
-        expect(async () => await orderRepository.getById(order.getId())).rejects.toThrow(
-            `There is no order with this id: ${order.getId()}`
-        );
+        expect(
+            async () => await orderRepository.getById(order.getId())
+        ).rejects.toThrow(`There is no order with this id: ${order.getId()}`);
     });
 
     test("Must update a Order", async () => {
@@ -64,7 +64,7 @@ describe("Testing OrderRepository", () => {
         await orderRepository.create(order, OrderPlaced.create(order));
         order.addItem(item1, 3);
         order.addItem(item2, 4);
-        await orderRepository.update(order, OrderUpdated.create(order));
+        await orderRepository.update(order, OrderUpdated.create(order, "OrderUdated"));
         const orderUpdated = await orderRepository.getById(order.getId());
         expect(orderUpdated.getTotal()).toBe(185);
         expect(order.getOrderItems().length).toBe(2);
