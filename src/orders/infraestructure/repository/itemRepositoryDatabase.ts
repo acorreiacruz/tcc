@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import ItemRepository from "../../domain/repository/itemRepository";
+import { PrismaClient } from "../orm/prisma/prisma-client";
+import ItemRepository from "./itemRepository";
 import Item from "../../domain/entity/item";
 
 export default class ItemRepositoryDatabase implements ItemRepository {

@@ -1,7 +1,7 @@
 import Order from "../../domain/entity/order";
-import DomainEvent from "../../domain/event/domainEvent";
-import OrderRepository from "../../domain/repository/orderRepository";
-import { PrismaClient } from "@prisma/client";
+import DomainEvent from "../../../common/domainEvent";
+import OrderRepository from "./orderRepository";
+import { PrismaClient } from "../orm/prisma/prisma-client";
 
 export default class OrderRepositoryDatabase implements OrderRepository {
     private client: PrismaClient;

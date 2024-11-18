@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import DomainEvent from "../../domain/event/domainEvent";
-import OutboxRepository from "../../domain/repository/outboxRepository";
-import Outbox from "../../application/outbox";
+import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
+import DomainEvent from "../../../common/domainEvent";
+import OutboxRepository from "../../../common/outboxRepository";
+import Outbox from "../../../common/outbox";
 
 export default class OrderOutboxRepositoryDatabase implements OutboxRepository {
     private connection: PrismaClient;

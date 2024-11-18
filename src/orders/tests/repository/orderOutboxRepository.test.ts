@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-import OutboxRepository from "../../domain/repository/outboxRepository";
+import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
+import OutboxRepository from "../../../common/outboxRepository";
 import OrderOutboxRepositoryDatabase from "../../infraestructure/repository/orderOutboxRepositoryDatabase";
 import Order from "../../domain/entity/order";
 import OrderPlaced from "../../domain/event/orderPlaced";

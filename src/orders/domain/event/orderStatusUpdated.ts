@@ -1,5 +1,5 @@
 import Order from "../entity/order";
-import DomainEvent from "./domainEvent";
+import DomainEvent from "../../../common/domainEvent";
 import crypto from "crypto";
 
 export default class OrderStatusUpdated extends DomainEvent {

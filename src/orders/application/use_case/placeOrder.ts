@@ -1,8 +1,8 @@
 import Item from "../../domain/entity/item";
 import Order from "../../domain/entity/order";
 import OrderPlaced from "../../domain/event/orderPlaced";
-import ItemRepository from "../../domain/repository/itemRepository";
-import OrderRepository from "../../domain/repository/orderRepository";
+import ItemRepository from "../../infraestructure/repository/itemRepository";
+import OrderRepository from "../../infraestructure/repository/orderRepository";
 
 export default class PlaceOrder {
     private orderRepository: OrderRepository;
