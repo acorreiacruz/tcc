@@ -83,4 +83,13 @@ export default class Stock {
     ): Stock {
         return new Stock(stockId, itemId, totalQuantity, reservedQuantity);
     }
+
+    toJSON(): any {
+        return {
+            stockId: this.stockId,
+            itemId: this.itemId,
+            totalQuantity: this.totalQuantity,
+            reservedQuantity: this.reservedQuantity
+        }
+    }
 }
