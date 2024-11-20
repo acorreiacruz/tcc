@@ -23,7 +23,6 @@ let item2 = Item.create("Item 2", "Description Item 2", 35.0);
 
 describe("Testing OrderRepository", () => {
     beforeEach(async () => {
-        await client.order.deleteMany();
         await client.item.createMany({
             data: [
                 {
@@ -44,23 +43,25 @@ describe("Testing OrderRepository", () => {
 
     afterEach(async () => {
         await client.item.deleteMany();
+        await client.orderOutbox.deleteMany();
+        await client.order.deleteMany();
     });
 
     test("Must create a Order and get it by id", async () => {
         await orderRepository.create(order, OrderPlaced.create(order));
         const orderReceived = await orderRepository.getById(order.getId());
-        expect(orderReceived).toBeTruthy();
+        expect(orderReceived.getId()).toBe(order.getId());
+        expect(orderReceived.getUserId()).toBe(order.getUserId());
+        expect(orderReceived.getTotal()).toBe(order.getTotal());
     });
 
     test("Must throw a error when there is no Order with specific id", async () => {
         expect(
             async () => await orderRepository.getById(order.getId())
-        ).rejects.toThrow(`There is no order with this id: ${order.getId()}`);
+        ).rejects.toThrow(new Error(`There is no order with this id: ${order.getId()}`));
     });
 
     test("Must update a Order", async () => {
-        expect(order.getTotal()).toBe(0);
-        expect(order.getOrderItems().length).toBe(0);
         await orderRepository.create(order, OrderPlaced.create(order));
         order.addItem(item1, 3);
         order.addItem(item2, 4);
