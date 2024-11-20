@@ -1,6 +1,6 @@
-import OutboxRepository from "../infraestructure/repository/outboxRepository";
 import MessageBroker from "../../common/messageBroker";
 import Outbox from "../../common/outbox";
+import OutboxRepository from "../../common/outboxRepository";
 import {
     ORDER_PLACED_EXCHANGE,
     ORDER_PLACED_ROUTING_KEY,
@@ -70,7 +70,7 @@ export default class OrderOutboxProcessor {
                 publishedOutboxes.push(orderOutbox);
             }
         }
-        await this.outboxRepository.update(publishedOutboxes);
+        await this.outboxRepository.updateStatus(publishedOutboxes);
     }
 
     async removePublhishedOutboxes(): Promise<void> {
