@@ -20,6 +20,19 @@ export default class StockOutboxRepositoryDatabase implements OutboxRepository {
         });
     }
 
+    async updateStatus(outboxes: Outbox[]): Promise<void> {
+        await this.connection.stockOutbox.updateMany({
+            where: {
+                id: {
+                    in: outboxes.map(outbox => outbox.id)
+                }
+            },
+            data: {
+                status: outboxes[0].status
+            }
+        });
+    }
+
     async getByStatus(status: string[]): Promise<Outbox[]> {
         const outboxDatas = await this.connection.stockOutbox.findMany({
             where: {
