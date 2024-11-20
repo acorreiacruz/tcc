@@ -49,7 +49,7 @@ export default class OrderRepositoryDatabase implements OrderRepository {
                 eventId: event.eventId,
                 eventName: event.name,
                 status: "pending",
-                payload: JSON.stringify(event),
+                event: JSON.stringify(event),
             },
         });
         await this.client.$transaction([orderCreation, orderOutboxCreation]);
@@ -72,7 +72,7 @@ export default class OrderRepositoryDatabase implements OrderRepository {
                 eventId: event.eventId,
                 eventName: event.name,
                 status: "pending",
-                payload: JSON.stringify(event),
+                event: JSON.stringify(event),
             },
         });
         await this.client.$transaction([orderUpdate, orderOutboxCreation]);
