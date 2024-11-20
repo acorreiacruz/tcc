@@ -52,4 +52,13 @@ export default class StockOutboxRepositoryDatabase implements OutboxRepository {
         });
     }
 
+    async delete(outboxes: Outbox[]): Promise<void> {
+        await this.connection.stockOutbox.deleteMany({
+            where: {
+                id: {
+                    in: outboxes.map(outbox => outbox.id)
+                }
+            },
+        });
+    }
 }
