@@ -1,10 +1,10 @@
 import PlaceOrder from "../../application/use_case/placeOrder";
-import OrderRepository from "../../domain/repository/orderRepository";
 import OrderRepositoryDatabase from "../../infraestructure/repository/orderRepositoryDatabase";
-import ItemRepository from "../../domain/repository/itemRepository";
 import ItemRepositoryDatabase from "../../infraestructure/repository/itemRepositoryDatabase";
-import { PrismaClient } from "@prisma/client";
 import Item from "../../domain/entity/item";
+import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
+import OrderRepository from "../../infraestructure/repository/orderRepository";
+import ItemRepository from "../../infraestructure/repository/itemRepository";
 
 let orderRepository: OrderRepository = new OrderRepositoryDatabase();
 let itemRepository: ItemRepository = new ItemRepositoryDatabase();
@@ -58,7 +58,7 @@ describe("Tesing PlaceOrder use case", () => {
         const placeOrderOutput = await placeOrder.execute(placeOrderCommand);
         const order = await orderRepository.getById(placeOrderOutput.orderId);
         expect(order.getId()).toBe(placeOrderOutput.orderId);
-        expect(order.getStatus()).toBe(placeOrderOutput.status);
+        expect(placeOrderOutput.status).toBe("on_process");
         expect(order.getTotal()).toBe(139.5);
     });
 });
