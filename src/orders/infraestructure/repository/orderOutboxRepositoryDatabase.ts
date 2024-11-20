@@ -9,33 +9,30 @@ export default class OrderOutboxRepositoryDatabase implements OutboxRepository {
     constructor() {
         this.connection = new PrismaClient();
     }
-    
+
     async delete(outboxes: Outbox[]): Promise<void> {
-        const outboxIds = outboxes.map(outbox => outbox.id);
         await this.connection.orderOutbox.deleteMany({
             where: {
-                id: {in: outboxIds},
-                status: outboxes[0].status
-            }
+                id: { in: outboxes.map((outbox) => outbox.id) },
+                status: outboxes[0].status,
+            },
         });
     }
 
-    async update(outboxes: Outbox[]): Promise<void> {
-        const outboxIds = outboxes.map(outbox => outbox.id);
+    async updateStatus(outboxes: Outbox[]): Promise<void> {
         await this.connection.orderOutbox.updateMany({
             where: {
-                id: { in: outboxIds },
+                id: { in: outboxes.map((outbox) => outbox.id) },
             },
             data: {
-                status: outboxes[0].status
-            }
+                status: outboxes[0].status,
+            },
         });
     }
 
     async create(event: DomainEvent): Promise<any> {
         await this.connection.orderOutbox.create({
             data: {
-                orderId: event.entityId,
                 eventId: event.eventId,
                 eventName: event.name,
                 status: "pending",
@@ -49,14 +46,12 @@ export default class OrderOutboxRepositoryDatabase implements OutboxRepository {
                 status: { in: status },
             },
         });
-        const orderOutboxes = outboxesData.map((outboxData) => ({
+        return outboxesData.map((outboxData) => ({
             id: outboxData.id,
             eventId: outboxData.eventId,
             eventName: outboxData.eventName,
-            entityId: outboxData.orderId,
             status: outboxData.status,
             payload: outboxData.payload,
         }));
-        return orderOutboxes;
     }
 }
