@@ -3,5 +3,5 @@ export default interface Outbox {
     eventId: string;
     eventName: string;
     status: string;
-    payload: string;
+    event: string;
 }
