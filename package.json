@@ -10,6 +10,7 @@
     "migrate:order": "npx prisma migrate dev --schema=./src/orders/infraestructure/orm/prisma/schema.prisma --name",
     "migrate:stock": "npx prisma migrate dev --schema=./src/stock/infraestructure/orm/prisma/schema.prisma --name",
     "migrate:delivery": "npx prisma migrate dev --schema=./src/delivery/infraestructure/orm/prisma/schema.prisma --name",
+    "migrate:payment": "npx prisma migrate dev --schema=./src/delivery/infraestructure/orm/prisma/schema.prisma --name",
     "prisma-client": "npx prisma generate"
   },
   "author": "",
