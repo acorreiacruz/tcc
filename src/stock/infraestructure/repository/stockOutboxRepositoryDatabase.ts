@@ -19,4 +19,24 @@ export default class StockOutboxRepositoryDatabase implements OutboxRepository {
             },
         });
     }
+
+    async getByStatus(status: string[]): Promise<Outbox[]> {
+        const outboxDatas = await this.connection.stockOutbox.findMany({
+            where: {
+                status: {
+                    in: status,
+                },
+            },
+        });
+        return outboxDatas.map((outboxData) => {
+            return {
+                id: outboxData.id,
+                eventId: outboxData.eventId,
+                eventName: outboxData.eventName,
+                status: outboxData.status,
+                payload: outboxData.payload,
+            };
+        });
+    }
+
 }
