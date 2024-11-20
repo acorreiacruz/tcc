@@ -46,17 +46,17 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         });
         const orderOutboxCreation = this.client.orderOutbox.create({
             data: {
-                        eventId: event.eventId,
-                        eventName: event.name,
-                        status: "pending",
-                        payload: JSON.stringify(event),
+                eventId: event.eventId,
+                eventName: event.name,
+                status: "pending",
+                payload: JSON.stringify(event),
             },
         });
         await this.client.$transaction([orderCreation, orderOutboxCreation]);
     }
 
     async update(order: Order, event: DomainEvent): Promise<void> {
-        const orderData = await this.client.order.update({
+        const orderUpdate = this.client.order.update({
             where: {
                 orderId: order.getId(),
             },
@@ -65,17 +65,16 @@ export default class OrderRepositoryDatabase implements OrderRepository {
                 paymentMethod: order.getPaymentMethod(),
                 fulfillmentMethod: order.getFulfillmentMethod(),
                 total: order.getTotal(),
-                orderOutbox: {
-                    create: {
-                        eventId: event.eventId,
-                        eventName: event.name,
-                        status: "pending",
-                        payload: JSON.stringify(event),
-                    },
-                },
+            }
+        });
+        const orderOutboxCreation = this.client.orderOutbox.create({
+            data: {
+                eventId: event.eventId,
+                eventName: event.name,
+                status: "pending",
+                payload: JSON.stringify(event),
             },
         });
-        if (!orderData)
-            throw new Error(`There is no order with this id: ${order.getId()}`);
+        await this.client.$transaction([orderUpdate, orderOutboxCreation]);
     }
 }
