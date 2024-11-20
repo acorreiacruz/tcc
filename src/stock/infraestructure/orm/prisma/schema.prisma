@@ -23,6 +23,6 @@ model StockOutbox {
   eventId   String   @unique @map("event_id") @db.Uuid
   eventName String   @map("event_name")
   status    String
-  payload   String
+  event   String
   @@map("stock_outbox")
 }
