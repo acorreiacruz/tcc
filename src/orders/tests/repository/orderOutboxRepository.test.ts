@@ -1,37 +1,19 @@
 import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
 import OutboxRepository from "../../../common/outboxRepository";
 import OrderOutboxRepositoryDatabase from "../../infraestructure/repository/orderOutboxRepositoryDatabase";
-import Order from "../../domain/entity/order";
-import OrderPlaced from "../../domain/event/orderPlaced";
+import Outbox from "../../../common/outbox";
+import { OrderDomainEventMock } from "../utils/orderDomainEventsMocks";
 
 let connection: PrismaClient = new PrismaClient();
 let orderOutboxRepository: OutboxRepository =
     new OrderOutboxRepositoryDatabase();
-let order: Order = Order.restore(
-    "7849803c-ae0b-4a9a-89a0-048182681627",
-    "b73cfeba-7087-4172-93dc-d77f225c0628",
-    new Date("2024-11-09T12:45:00"),
-    "pending",
-    "delivery",
-    "credit_card",
-    120
-);
-let orderPlaced: OrderPlaced = OrderPlaced.create(order);
+const orderDomainEventMock: OrderDomainEventMock = new OrderDomainEventMock();
+let orderOutboxes: Outbox[];
 
 
 describe("Testing OrderOutboxRepository", () => {
     beforeEach(async () => {
-        await connection.order.create({
-            data: {
-                orderId: order.getId(),
-                userId: order.getUserId(),
-                orderDate: order.getOrderDate(),
-                status: order.getStatus(),
-                paymentMethod: order.getPaymentMethod(),
-                fulfillmentMethod: order.getFulfillmentMethod(),
-                total: order.getTotal(),
-            },
-        });
+        await orderOutboxRepository.create(orderDomainEventMock);
     });
 
     afterEach(async () => {
@@ -39,11 +21,13 @@ describe("Testing OrderOutboxRepository", () => {
         await connection.orderOutbox.deleteMany();
     });
 
-    test("Must create a OrderOutbox record", async () => {
-        await orderOutboxRepository.create(orderPlaced);
-        const eventsJSONList = await orderOutboxRepository.getByStatus([
-            "pending",
-        ]);
-        expect(eventsJSONList.length).toBe(1);
+    test("Must create a OrderOutbox record from any order domain event", async () => {
+        orderOutboxes = await orderOutboxRepository.getByStatus(["pending"]);
+        expect(orderOutboxes[0].eventId).toBe(orderDomainEventMock.eventId);
+        expect(orderOutboxes[0].eventName).toBe(orderDomainEventMock.name);
+        expect(orderOutboxes[0].payload).toBe(
+            JSON.stringify(orderDomainEventMock)
+        );
+    });
     });
 });
