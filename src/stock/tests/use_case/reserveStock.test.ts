@@ -18,13 +18,13 @@ const stock2 = Stock.create("c91ff52a-8898-428c-a6e0-dc7d9698b245", 1000);
 const orderPlacedMock: OrderPlacedMock = new OrderPlacedMock();
 
 describe("Testing ReserveStock", () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
         await connection.stock.createMany({
             data: [stock1.toJSON(), stock2.toJSON()],
         });
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
         await connection.stock.deleteMany();
         await connection.stockOutbox.deleteMany();
     });

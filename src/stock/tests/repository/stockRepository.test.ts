@@ -33,13 +33,13 @@ class DomainEventMock extends DomainEvent {
 }
 
 describe("Testing StockRepository", () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
         await connection.stock.createMany({
             data: [stock1.toJSON(), stock2.toJSON()],
         });
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
         await connection.stock.deleteMany();
         await connection.stockOutbox.deleteMany();
     });
