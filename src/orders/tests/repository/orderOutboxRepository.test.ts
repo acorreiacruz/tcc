@@ -29,5 +29,13 @@ describe("Testing OrderOutboxRepository", () => {
             JSON.stringify(orderDomainEventMock)
         );
     });
+
+    test("Must update a OrderOutbox record", async () => {
+        orderOutboxes = await orderOutboxRepository.getByStatus(["pending"]);
+        orderOutboxes[0].status = "published";
+        await orderOutboxRepository.updateStatus(orderOutboxes);
+        orderOutboxes = await orderOutboxRepository.getByStatus(["published"]);
+        expect(orderOutboxes[0].status).toBe("published");
+    });
     });
 });
