@@ -30,5 +30,12 @@ describe("Testing StockOutboxRepository", () => {
         );
     });
 
+    test("Must update a outbox record", async () => {
+        stockOutboxes = await stockOutboxRepository.getByStatus(["pending"]);
+        stockOutboxes[0].status = "published"
+        await stockOutboxRepository.updateStatus(stockOutboxes);
+        stockOutboxes = await stockOutboxRepository.getByStatus(["published"]);
+        expect(stockOutboxes[0].status).toBe("published");
+    });
 
 });
