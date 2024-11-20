@@ -17,7 +17,6 @@ describe("Testing OrderOutboxRepository", () => {
     });
 
     afterEach(async () => {
-        await connection.order.deleteMany();
         await connection.orderOutbox.deleteMany();
     });
 
@@ -37,5 +36,11 @@ describe("Testing OrderOutboxRepository", () => {
         orderOutboxes = await orderOutboxRepository.getByStatus(["published"]);
         expect(orderOutboxes[0].status).toBe("published");
     });
+
+    test("Must delete a  OrderOutbox record", async () => {
+        orderOutboxes = await orderOutboxRepository.getByStatus(["pending"]);
+        await orderOutboxRepository.delete(orderOutboxes);
+        orderOutboxes = await orderOutboxRepository.getByStatus(["pending"]);
+        expect(orderOutboxes.length).toBe(0);
     });
 });
