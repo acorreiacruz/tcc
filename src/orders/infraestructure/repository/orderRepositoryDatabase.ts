@@ -30,7 +30,7 @@ export default class OrderRepositoryDatabase implements OrderRepository {
     }
 
     async create(order: Order, event: DomainEvent): Promise<void> {
-        await this.client.order.create({
+        const orderCreation = this.client.order.create({
             data: {
                 orderId: order.getId(),
                 userId: order.getUserId(),
@@ -42,16 +42,17 @@ export default class OrderRepositoryDatabase implements OrderRepository {
                 orderItems: {
                     create: Object.assign(order.getOrderItems()),
                 },
-                orderOutbox: {
-                    create: {
+            },
+        });
+        const orderOutboxCreation = this.client.orderOutbox.create({
+            data: {
                         eventId: event.eventId,
                         eventName: event.name,
                         status: "pending",
                         payload: JSON.stringify(event),
-                    },
-                },
             },
         });
+        await this.client.$transaction([orderCreation, orderOutboxCreation]);
     }
 
     async update(order: Order, event: DomainEvent): Promise<void> {
