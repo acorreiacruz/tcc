@@ -25,7 +25,7 @@ export default class StockRepositoryDataBase implements StockRepository {
                 eventId: event.eventId,
                 eventName: event.name,
                 status: "pending",
-                payload: JSON.stringify(event.toJSON())
+                event: JSON.stringify(event.toJSON())
             },
         });
         await this.connection.$transaction([...stockUpdates, stockOutbox]);
