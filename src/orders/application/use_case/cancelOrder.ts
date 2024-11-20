@@ -30,3 +30,10 @@ type CancelOrderCommand = {
 type CancelOrderOutput = {
     status: string;
 };
+
+export class UnauthorizedOrderCancellationError extends Error {
+    constructor() {
+        super("The logged user cannot cancel another user's order");
+        this.name = "UnauthorizedOrderCancellationError";
+    }
+}
