@@ -51,6 +51,6 @@ model OrderOutbox {
   eventId String @db.Uuid @unique @map("event_id")
   eventName String @map("event_name")
   status String
-  payload String
+  event String
   @@map("order_outbox")
 }
