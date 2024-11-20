@@ -9,7 +9,6 @@ export default class OrderStatusUpdated extends DomainEvent {
         const timestamp = new Date();
         return new OrderStatusUpdated(
             eventId,
-            order.getId(),
             correlationId,
             eventName,
             timestamp,
