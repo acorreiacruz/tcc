@@ -36,7 +36,7 @@ export default class OrderOutboxRepositoryDatabase implements OutboxRepository {
                 eventId: event.eventId,
                 eventName: event.name,
                 status: "pending",
-                payload: JSON.stringify(event),
+                event: JSON.stringify(event),
             },
         });
     }
@@ -51,7 +51,7 @@ export default class OrderOutboxRepositoryDatabase implements OutboxRepository {
             eventId: outboxData.eventId,
             eventName: outboxData.eventName,
             status: outboxData.status,
-            payload: outboxData.payload,
+            event: outboxData.event,
         }));
     }
 }
