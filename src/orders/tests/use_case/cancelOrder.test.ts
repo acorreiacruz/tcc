@@ -51,4 +51,11 @@ describe("Test CancelOrder", () => {
         expect(event.name).toBe("OrderCanceled");
         expect(event.payload.orderId).toBe(order.getId());
     });
+
+    test("Must not cancel a order placed by another logged user", async () => {
+        cancelOrderCommand.userId = "another_user_id";
+        expect(
+            async () => await cancelOrder.execute(cancelOrderCommand)
+        ).rejects.toThrow(UnauthorizedOrderCancellationError);
+    });
 });
