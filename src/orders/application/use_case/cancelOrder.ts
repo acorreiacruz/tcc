@@ -2,7 +2,7 @@ import Order from "../../domain/entity/order";
 import OrderStatusUpdated from "../../domain/event/orderStatusUpdated";
 import OrderRepository from "../../infraestructure/repository/orderRepository";
 
-export default class CancelOrder {
+export class CancelOrder {
     private orderRepository: OrderRepository;
     constructor(orderRepository: OrderRepository) {
         this.orderRepository = orderRepository;
@@ -12,13 +12,12 @@ export default class CancelOrder {
         const order: Order = await this.orderRepository.getById(
             command.orderId
         );
-        if (command.userId !== order.getUserId())
-            throw new Error(
-                "The logged user cannot cancel another user's order"
-            );
+        if (command.userId !== order.getUserId()) {
+            throw new UnauthorizedOrderCancellationError();
+        }
         order.cancel();
         const orderCanceled = OrderStatusUpdated.create(order, "OrderCanceled");
-        this.orderRepository.update(order, orderCanceled);
+        await this.orderRepository.update(order, orderCanceled);
         return { status: "on_process" };
     }
 }
