@@ -19,7 +19,6 @@ model Order {
   total Float
   status String
   orderItems OrderItem[]
-  orderOutbox OrderOutbox[]
   @@map("order")
 }
 
@@ -49,8 +48,6 @@ model OrderOutbox {
   id String @id @db.Uuid @default(uuid())
   createdAt DateTime @default(now()) @map("created_at") 
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") 
-  order Order @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
-  orderId String @db.Uuid @map("order_id")
   eventId String @db.Uuid @unique @map("event_id")
   eventName String @map("event_name")
   status String
