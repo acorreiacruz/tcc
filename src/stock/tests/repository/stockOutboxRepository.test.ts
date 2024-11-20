@@ -38,4 +38,11 @@ describe("Testing StockOutboxRepository", () => {
         expect(stockOutboxes[0].status).toBe("published");
     });
 
+    test("Must delete a outbox record", async () => {
+        stockOutboxes = await stockOutboxRepository.getByStatus(["pending"]);
+        await stockOutboxRepository.delete(stockOutboxes);
+        stockOutboxes = await stockOutboxRepository.getByStatus(["pending"]);
+        expect(stockOutboxes.length).toBe(0);
+    });
+
 });
