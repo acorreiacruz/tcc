@@ -25,7 +25,7 @@ describe("Testing StockOutboxRepository", () => {
         stockOutboxes = await stockOutboxRepository.getByStatus(["pending"]);
         expect(stockOutboxes[0].eventId).toBe(stockReservedMock.eventId);
         expect(stockOutboxes[0].eventName).toBe(stockReservedMock.name);
-        expect(stockOutboxes[0].payload).toBe(
+        expect(stockOutboxes[0].event).toBe(
             JSON.stringify(stockReservedMock)
         );
     });
