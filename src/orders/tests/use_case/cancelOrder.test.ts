@@ -28,11 +28,11 @@ const cancelOrder: CancelOrder = new CancelOrder(orderRepository);
 const orderPlaced: OrderPlaced = OrderPlaced.create(order);
 
 describe("Test CancelOrder", () => {
-    beforeAll(async () => {
+    beforeEach(async () => {
         await orderRepository.create(order, orderPlaced);
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
         await client.order.deleteMany();
         await client.orderOutbox.deleteMany();
     });

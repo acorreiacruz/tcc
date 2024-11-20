@@ -32,7 +32,7 @@ describe("Testing ReserveStock", () => {
         const result = await reserveStock.execute(orderPlacedMock);
         expect(result.status).toBe("on_process");
         const [outbox] = await stockOutboxRepository.getByStatus(["pending"]);
-        const outboxPayload: StockReserved = JSON.parse(outbox.payload);
+        const outboxPayload: StockReserved = JSON.parse(outbox.event);
         expect(outboxPayload.correlationId).toBe(orderPlacedMock.correlationId);
         expect(outbox.eventName).toBe("StockReserved");
         expect(outboxPayload.source).toBe("StockService");

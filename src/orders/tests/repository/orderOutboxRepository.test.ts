@@ -24,7 +24,7 @@ describe("Testing OrderOutboxRepository", () => {
         orderOutboxes = await orderOutboxRepository.getByStatus(["pending"]);
         expect(orderOutboxes[0].eventId).toBe(orderDomainEventMock.eventId);
         expect(orderOutboxes[0].eventName).toBe(orderDomainEventMock.name);
-        expect(orderOutboxes[0].payload).toBe(
+        expect(orderOutboxes[0].event).toBe(
             JSON.stringify(orderDomainEventMock)
         );
     });

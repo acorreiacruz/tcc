@@ -31,34 +31,45 @@ let item3 = new Item(
     15.5
 );
 
+const placeOrderCommand = {
+    userId: "9b27b243-9281-4e64-b32a-cb3976e1b6e3",
+    orderDate: "2024-11-09T15:30:00",
+    paymentMethod: "credit_card",
+    fulfillmentMethod: "delivery",
+    orderItems: {
+        "78947ecb-bdec-44ec-8574-71911e5fc1c2": { quantity: 2 },
+        "47d9535b-3297-410a-b766-e200c7cc59c1": { quantity: 3 },
+        "d1a523a3-1252-4a02-adac-084f3ee57901": { quantity: 4 },
+    },
+};
+
 describe("Tesing PlaceOrder use case", () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
         await connection.item.createMany({
             data: [item1.toJSON(), item2.toJSON(), item3.toJSON()],
         });
     });
 
-    afterEach(async () => {
+    afterAll(async () => {
         await connection.item.deleteMany();
         await connection.order.deleteMany();
+        await connection.orderOutbox.deleteMany();
     });
 
     test("Must place a order", async () => {
-        const placeOrderCommand = {
-            userId: "9b27b243-9281-4e64-b32a-cb3976e1b6e3",
-            orderDate: "2024-11-09T15:30:00",
-            paymentMethod: "credit_card",
-            fulfillmentMethod: "delivery",
-            orderItems: {
-                "78947ecb-bdec-44ec-8574-71911e5fc1c2": { quantity: 2 },
-                "47d9535b-3297-410a-b766-e200c7cc59c1": { quantity: 3 },
-                "d1a523a3-1252-4a02-adac-084f3ee57901": { quantity: 4 },
-            },
-        };
         const placeOrderOutput = await placeOrder.execute(placeOrderCommand);
-        const order = await orderRepository.getById(placeOrderOutput.orderId);
-        expect(order.getId()).toBe(placeOrderOutput.orderId);
         expect(placeOrderOutput.status).toBe("on_process");
-        expect(order.getTotal()).toBe(139.5);
+        const orderPlaced = await orderRepository.getById(placeOrderOutput.orderId);
+        expect(orderPlaced.getId()).toBe(placeOrderOutput.orderId);
+        expect(orderPlaced.getTotal()).toBe(139.5);
+        const outbox = await connection.orderOutbox.findFirstOrThrow({
+            where: {
+                status: "pending",
+                eventName: "OrderPlaced"
+            }
+        })
+        const event = JSON.parse(outbox.event);
+        expect(event.payload.orderId).toBe(orderPlaced.getId());
+        expect(event.payload.userId).toBe(orderPlaced.getUserId());
     });
 });
