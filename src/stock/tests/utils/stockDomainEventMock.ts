@@ -40,3 +40,24 @@ export class StockReservedMock extends DomainEvent {
         );
     }
 }
+
+
+export class OrderConfirmedMock extends DomainEvent {
+    constructor() {
+        super(
+            "fcf76b0c-31dd-4c78-985b-63335f28ddf5",
+            "8750b03b-a46d-4c14-9c35-2d1d1ad08cc3",
+            "OrderConfirmed",
+            new Date(),
+            "OrderService",
+            {
+                orderId: "dbbd4d0d-064c-479b-84d7-f011fcb25e22",
+                userId: "b6c80e54-aa1c-4272-9796-15ae409472a6",
+                orderItems: {
+                    "f528ddf5-c04e-420b-bf05-878dbff207bc": { quantity: 50 },
+                    "0db4e1e9-1394-475b-961f-42505dde28f0": { quantity: 100 },
+                },
+            }
+        );
+    }
+}
