@@ -34,8 +34,8 @@ describe("Testing ReserveStock", () => {
         const [outbox] = await stockOutboxRepository.getByStatus(["pending"]);
         const outboxPayload: StockReserved = JSON.parse(outbox.event);
         expect(outboxPayload.correlationId).toBe(orderPlacedMock.correlationId);
-        expect(outbox.eventName).toBe("StockReserved");
-        expect(outboxPayload.source).toBe("StockService");
+        expect(outbox.eventName).toBe("stock_reserved");
+        expect(outboxPayload.source).toBe("stock_reserve_stock");
         expect(outbox.status).toBe("pending");
     });
 });
