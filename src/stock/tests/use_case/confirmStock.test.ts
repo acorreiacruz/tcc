@@ -57,7 +57,8 @@ describe("Testing ConfirmStock", () => {
             },
         });
         const event = JSON.parse(outbox.event);
-        expect(event.name).toEqual("StockConfirmed");
+        expect(event.name).toEqual("stock_confirmed");
+        expect(event.source).toEqual("stock_confirm_stock");
         expect(event.correlationId).toEqual(orderConfirmedMock.correlationId);
         expect(event.payload.orderId).toEqual(
             orderConfirmedMock.payload.orderId
