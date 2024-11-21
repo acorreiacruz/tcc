@@ -4,8 +4,8 @@ import crypto from "crypto";
 export default class StockConfirmed extends DomainEvent {
     static create(event: DomainEvent): StockConfirmed {
         const eventId = crypto.randomUUID();
-        const name = "StockConfirmed";
-        const source = "StockService";
+        const name = "stock_confirmed";
+        const source = "stock_confirm_stock";
         const timestamp = new Date();
         const payload = {
             userId: event.payload.userId,
