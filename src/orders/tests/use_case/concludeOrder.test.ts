@@ -7,15 +7,14 @@ import {
 } from "../utils/orderDomainEventsMocks";
 import { getItemsData, getOrdersData } from "../utils/entitiesData";
 
-let orderRepository: OrderRepository = new OrderRepositoryDatabase();
-let concludeOrder: ConcludeOrder = new ConcludeOrder(orderRepository);
-let dbClient: PrismaClient = new PrismaClient();
-
-const itemsData = getItemsData(2);
-const orderData = getOrdersData(1, itemsData, "out_for_delivery")[0];
-const deliveryConcludedMock = new DeliveryConcludedMock(orderData);
-
 describe("Testing ConcludeOrder", () => {
+    const orderRepository: OrderRepository = new OrderRepositoryDatabase();
+    const concludeOrder: ConcludeOrder = new ConcludeOrder(orderRepository);
+    const dbClient: PrismaClient = new PrismaClient();
+    const itemsData = getItemsData(2);
+    const orderData = getOrdersData(1, itemsData, "out_for_delivery")[0];
+    const deliveryConcludedMock = new DeliveryConcludedMock(orderData);
+
     beforeEach(async () => {
         await dbClient.item.createMany({
             data: itemsData,
