@@ -38,7 +38,7 @@ export default class PlaceOrder {
     }
 }
 
-type PlaceOrderCommand = {
+export type PlaceOrderCommand = {
     userId: string;
     orderDate: string;
     fulfillmentMethod: string;
