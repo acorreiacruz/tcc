@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { PlaceOrderCommand } from "../../application/use_case/placeOrder";
 
 const getRandomInt = (max: number, min: number): number => {
     min = Math.ceil(min);
@@ -50,6 +51,20 @@ export const getOrdersData = (
         });
     }
     return ordersData;
+};
+
+export const getPlaceOrderCommand = (orderData: OrderData): PlaceOrderCommand => {
+    const orderItems: { [itemId: string]: { quantity: number } } = {};
+    for (const orderItem of orderData.orderItems) {
+        orderItems[orderItem.itemId] = { quantity: orderItem.quantity };
+    }
+    return {
+        userId: orderData.userId,
+        orderDate: "2024-11-22T15:45:00",
+        paymentMethod: orderData.paymentMethod,
+        fulfillmentMethod: orderData.fulfillmentMethod,
+        orderItems: orderItems,
+    };
 };
 
 export type ItemData = {
