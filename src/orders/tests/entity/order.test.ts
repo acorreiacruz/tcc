@@ -97,6 +97,19 @@ describe("Unit testing Order", () => {
         expect(order.getStatus()).toBe("confirmed");
     });
 
+    test("Must not confirm an order that has already been confirmed", () => {
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            OrderStatus.Confirmed,
+            fulfillmentMethod,
+            paymentMethod,
+            100
+        );
+        expect(() => order.confirm()).toThrow(OrderAlreadyConfirmedError);
+    });
+
     test("Must not confirm Order that has not a 'pending' status", () => {
         status = "confirmed";
         const order = Order.restore(
