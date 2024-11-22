@@ -6,6 +6,7 @@ import {
     InvalidOrderStatusError,
     InvalidPaymentMethodError,
     InvalidTotalOrderError,
+    OrderAlreadyCanceledError,
     OrderAlreadyConfirmedError,
     OrderConfirmTransitionError,
 } from "../../domain/entity/order.errors";
@@ -169,6 +170,19 @@ describe("Unit testing Order", () => {
         expect(order.getStatus()).toBe("pending");
         order.cancel();
         expect(order.getStatus()).toBe("canceled");
+    });
+
+    test("Must not cancel a Order that has already been canceled", () => {
+        const order = Order.restore(
+            orderId,
+            userId,
+            orderDate,
+            OrderStatus.Canceled,
+            fulfillmentMethod,
+            paymentMethod,
+            100
+        );
+        expect(() => order.cancel()).toThrow(OrderAlreadyCanceledError);
     });
 
     test("Must fail a Order that is 'out_for_delivery'", () => {
