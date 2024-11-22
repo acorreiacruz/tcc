@@ -10,15 +10,16 @@ import {
     OrderData,
 } from "../utils/entitiesData";
 
-let orderRepository: OrderRepository = new OrderRepositoryDatabase();
-let confirmOrder: ConfirmOrder = new ConfirmOrder(orderRepository);
-let dbClient: PrismaClient = new PrismaClient();
-
-const itemsData: ItemData[] = getItemsData(3);
-const orderData: OrderData = getOrdersData(1, itemsData, "pending")[0];
-let paymentConfirmedMock: PaymentConfirmedMock;
-
 describe("Testing ConfirmOrder", () => {
+    const orderRepository: OrderRepository = new OrderRepositoryDatabase();
+    const confirmOrder: ConfirmOrder = new ConfirmOrder(orderRepository);
+    const dbClient: PrismaClient = new PrismaClient();
+    const itemsData: ItemData[] = getItemsData(3);
+    const orderData: OrderData = getOrdersData(1, itemsData, "pending")[0];
+    const paymentConfirmedMock: PaymentConfirmedMock = new PaymentConfirmedMock(
+        orderData
+    );
+
     beforeEach(async () => {
         await dbClient.item.createMany({
             data: itemsData,
@@ -46,7 +47,6 @@ describe("Testing ConfirmOrder", () => {
     });
 
     test("Must confirm a order", async () => {
-        paymentConfirmedMock = new PaymentConfirmedMock(orderData);
         await confirmOrder.execute(paymentConfirmedMock);
         const order = await dbClient.order.findFirstOrThrow({
             where: {
