@@ -9,17 +9,16 @@ import {
     OrderData,
 } from "../utils/entitiesData";
 
-const itemsData: ItemData[] = getItemsData(3);
-const orderData: OrderData = getOrdersData(1, itemsData, "confirmed")[0];
-const dbClient: PrismaClient = new PrismaClient();
-const orderRepository: OrderRepository = new OrderRepositoryDatabase();
-const cancelOrder: CancelOrder = new CancelOrder(orderRepository);
-const cancelOrderCommand = {
-    orderId: orderData.orderId,
-    userId: orderData.userId,
-};
-
 describe("Test CancelOrder", () => {
+    const itemsData: ItemData[] = getItemsData(3);
+    const orderData: OrderData = getOrdersData(1, itemsData, "confirmed")[0];
+    const dbClient: PrismaClient = new PrismaClient();
+    const orderRepository: OrderRepository = new OrderRepositoryDatabase();
+    const cancelOrder: CancelOrder = new CancelOrder(orderRepository);
+    const cancelOrderCommand = {
+        orderId: orderData.orderId,
+        userId: orderData.userId,
+    };
     beforeEach(async () => {
         await dbClient.item.createMany({
             data: itemsData,
