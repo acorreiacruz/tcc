@@ -1,6 +1,14 @@
 import Item from "./item";
 import OrderItem from "../value_object/orderItem";
 import crypto from "crypto";
+import {
+    InvalidFulfillmentMethodError,
+    InvalidOrderStatusError,
+    InvalidPaymentMethodError,
+    InvalidTotalOrderError,
+    OrderAlreadyConfirmedError,
+    OrderConfirmTransitionError,
+} from "./order.errors";
 
 export default class Order {
     private orderId: string;
@@ -26,34 +34,19 @@ export default class Order {
                 paymentMethod as PaymentMethod
             )
         ) {
-            throw new Error(
-                `Invalid payment method. It only is possible: ${Object.values(
-                    PaymentMethod
-                ).join(", ")}`
-            );
+            throw new InvalidPaymentMethodError();
         }
         if (
             !Object.values(FulfillmentMethod).includes(
                 fulfillmentMethod as FulfillmentMethod
             )
         ) {
-            throw new Error(
-                `Invalid payment method. It only is possible: ${Object.values(
-                    FulfillmentMethod
-                ).join(", ")}`
-            );
+            throw new InvalidFulfillmentMethodError();
         }
-        if (!Object.values(Status).includes(status as Status)) {
-            throw new Error(
-                `Invalid status value. It only is possible: ${Object.values(
-                    Status
-                ).join(", ")}`
-            );
+        if (!Object.values(OrderStatus).includes(status as OrderStatus)) {
+            throw new InvalidOrderStatusError();
         }
-        if (total < 0)
-            throw new Error(
-                "The total value of a order can't be a negative number"
-            );
+        if (total < 0) throw new InvalidTotalOrderError();
         this.orderDate = orderDate;
         this.userId = userId;
         this.orderId = orderId;
@@ -113,15 +106,7 @@ export default class Order {
     prepare(): void {
         if (this.status != "confirmed")
             throw new Error(
-                "It is impossible set Order status as 'in_preparation' if is not 'confirmed'"
-            );
-        this.status = "in_preparation";
-    }
-
-    ready(): void {
-        if (this.status != "in_preparation")
-            throw new Error(
-                "It is impossible set Order status as 'ready' if is not 'in_preparation'"
+                "It is impossible set Order status as 'ready' if is not 'confirmed'"
             );
         this.status = "ready";
     }
@@ -164,7 +149,7 @@ export default class Order {
             crypto.randomUUID(),
             userId,
             orderDate,
-            "pending",
+            OrderStatus.Pending,
             fulfillmentMethod,
             paymentMethod,
             0
@@ -205,23 +190,22 @@ export default class Order {
     }
 }
 
-enum Status {
+export enum OrderStatus {
     Pending = "pending",
     Confirmed = "confirmed",
-    InPreparation = "in_preparation",
     Ready = "ready",
     OutForDelivery = "out_for_delivery",
     Concluded = "concluded",
-    DeliveryFailed = "delivery_failed",
+    Failed = "failed",
     Canceled = "canceled",
 }
 
-enum FulfillmentMethod {
+export enum FulfillmentMethod {
     Delivery = "delivery",
     Withdrawal = "withdrawal",
 }
 
-enum PaymentMethod {
+export enum PaymentMethod {
     CreditCard = "credit_card",
     Pix = "pix",
     DebitCard = "debit_card",
