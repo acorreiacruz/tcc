@@ -98,6 +98,7 @@ describe("Testing ConfirmOrder", () => {
             },
         });
         const event = JSON.parse(outbox.event);
+        expect(event.correlationId).toBe(paymentConfirmedMock.correlationId);
         expect(event.payload.orderId).toBe(orderData.orderId);
         expect(event.payload.userId).toBe(orderData.userId);
         expect(event.name).toBe("order_confirmed");
