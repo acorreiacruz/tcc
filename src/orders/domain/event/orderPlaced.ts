@@ -10,9 +10,9 @@ export default class OrderPlaced extends DomainEvent {
         return new OrderPlaced(
             eventId,
             correlationId,
-            "OrderPlaced",
+            "order_placed",
             timestamp,
-            "OrderService",
+            "order_place_order",
             {
                 orderId: order.getId(),
                 userId: order.getUserId(),
