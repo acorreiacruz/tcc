@@ -104,11 +104,10 @@ export default class Order {
     }
 
     confirm(): void {
-        if (this.status != "pending")
-            throw new Error(
-                "It is impossible set Order status as 'confirmed' if is not 'pending'"
-            );
-        this.status = "confirmed";
+        if (this.status === OrderStatus.Confirmed)
+            throw new OrderAlreadyConfirmedError();
+        if (this.status != "pending") throw new OrderConfirmTransitionError();
+        this.status = OrderStatus.Confirmed;
     }
 
     prepare(): void {
