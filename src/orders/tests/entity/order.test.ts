@@ -1,6 +1,14 @@
 import Item from "../../domain/entity/item";
-import Order from "../../domain/entity/order";
+import Order, { OrderStatus } from "../../domain/entity/order";
 import crypto from "crypto";
+import {
+    InvalidFulfillmentMethodError,
+    InvalidOrderStatusError,
+    InvalidPaymentMethodError,
+    InvalidTotalOrderError,
+    OrderAlreadyConfirmedError,
+    OrderConfirmTransitionError,
+} from "../../domain/entity/order.errors";
 
 let orderId: string = crypto.randomUUID();
 let userId: string = crypto.randomUUID();
@@ -42,9 +50,7 @@ describe("Unit testing Order", () => {
     test("Must not create a Order with invalid fulfillment method", () => {
         expect(() =>
             Order.create(userId, orderDate, "other", paymentMethod)
-        ).toThrow(
-            "Invalid payment method. It only is possible: delivery, withdrawal"
-        );
+        ).toThrow(InvalidFulfillmentMethodError);
     });
 
     test("Must not create a Order with invalid total value", () => {
@@ -58,15 +64,13 @@ describe("Unit testing Order", () => {
                 paymentMethod,
                 -10
             )
-        ).toThrow("The total value of a order can't be a negative number");
+        ).toThrow(InvalidTotalOrderError);
     });
 
     test("Must not create a Order with invalid payment method", () => {
         expect(() =>
             Order.create(userId, orderDate, fulfillmentMethod, "different")
-        ).toThrow(
-            "Invalid payment method. It only is possible: credit_card, pix, debit_card"
-        );
+        ).toThrow(InvalidPaymentMethodError);
     });
 
     test("Must not create a Order with invalid status", () => {
@@ -80,9 +84,7 @@ describe("Unit testing Order", () => {
                 paymentMethod,
                 10
             )
-        ).toThrow(
-            "Invalid status value. It only is possible: pending, confirmed, in_preparation, ready, out_for_delivery, concluded, delivery_failed, canceled"
-        );
+        ).toThrow(InvalidOrderStatusError);
     });
 
     test("Must confirm a pending Order", () => {
@@ -137,7 +139,7 @@ describe("Unit testing Order", () => {
         );
         expect(order.getStatus()).toBe("confirmed");
         order.prepare();
-        expect(order.getStatus()).toBe("in_preparation");
+        expect(order.getStatus()).toBe("ready");
     });
 
     test("Must not prepare Order that has not a 'confirmed' status", () => {
@@ -153,7 +155,7 @@ describe("Unit testing Order", () => {
         );
         expect(order.getStatus()).toBe("pending");
         expect(() => order.prepare()).toThrow(
-            "It is impossible set Order status as 'in_preparation' if is not 'confirmed'"
+            "It is impossible set Order status as 'ready' if is not 'confirmed'"
         );
     });
 
@@ -259,37 +261,6 @@ describe("Unit testing Order", () => {
         expect(order.getStatus()).toBe("confirmed");
         expect(() => order.delivery()).toThrow(
             "It is impossible set Order status as 'out_for_delivery' if is not 'ready'"
-        );
-    });
-
-    test("Must ready a Order that is 'in_preparation'", () => {
-        const order = Order.restore(
-            orderId,
-            userId,
-            orderDate,
-            "in_preparation",
-            fulfillmentMethod,
-            paymentMethod,
-            1000
-        );
-        expect(order.getStatus()).toBe("in_preparation");
-        order.ready();
-        expect(order.getStatus()).toBe("ready");
-    });
-
-    test("Must not ready a Order that is not 'ready'", () => {
-        const order = Order.restore(
-            orderId,
-            userId,
-            orderDate,
-            "confirmed",
-            fulfillmentMethod,
-            paymentMethod,
-            1000
-        );
-        expect(order.getStatus()).toBe("confirmed");
-        expect(() => order.ready()).toThrow(
-            "It is impossible set Order status as 'ready' if is not 'in_preparation'"
         );
     });
 });
