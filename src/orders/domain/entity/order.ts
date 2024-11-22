@@ -6,6 +6,7 @@ import {
     InvalidOrderStatusError,
     InvalidPaymentMethodError,
     InvalidTotalOrderError,
+    OrderAlreadyCanceledError,
     OrderAlreadyConfirmedError,
     OrderConfirmTransitionError,
 } from "./order.errors";
@@ -136,6 +137,8 @@ export default class Order {
     }
 
     cancel(): void {
+        if (this.status === OrderStatus.Canceled)
+            throw new OrderAlreadyCanceledError();
         this.status = "canceled";
     }
 
