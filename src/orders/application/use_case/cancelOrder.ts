@@ -1,6 +1,7 @@
 import Order from "../../domain/entity/order";
-import OrderStatusUpdated from "../../domain/event/orderStatusUpdated";
+import OrderCanceled from "../../domain/event/orderCanceled";
 import OrderRepository from "../../infraestructure/repository/orderRepository";
+import { UnauthorizedOrderUpdateError } from "./errors";
 
 export class CancelOrder {
     private orderRepository: OrderRepository;
@@ -12,28 +13,23 @@ export class CancelOrder {
         const order: Order = await this.orderRepository.getById(
             command.orderId
         );
+        if (order.getStatus() === "canceled")
+            return { status: "already_canceled" };
         if (command.userId !== order.getUserId()) {
-            throw new UnauthorizedOrderCancellationError();
+            throw new UnauthorizedOrderUpdateError();
         }
         order.cancel();
-        const orderCanceled = OrderStatusUpdated.create(order, "OrderCanceled");
+        const orderCanceled = OrderCanceled.create(order);
         await this.orderRepository.update(order, orderCanceled);
         return { status: "on_process" };
     }
 }
 
-type CancelOrderCommand = {
+export type CancelOrderCommand = {
     orderId: string;
     userId: string;
 };
 
-type CancelOrderOutput = {
+export type CancelOrderOutput = {
     status: string;
 };
-
-export class UnauthorizedOrderCancellationError extends Error {
-    constructor() {
-        super("The logged user cannot cancel another user's order");
-        this.name = "UnauthorizedOrderCancellationError";
-    }
-}
