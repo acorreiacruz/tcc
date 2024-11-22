@@ -45,6 +45,7 @@ export const getOrdersData = (
             orderDate: new Date(),
             paymentMethod: paymentMethod,
             fulfillmentMethod: fulfillmentMethod,
+            orderItems: orderItems,
             total: total,
         });
     }
@@ -65,5 +66,6 @@ export type OrderData = {
     orderDate: Date;
     paymentMethod: string;
     fulfillmentMethod: string;
+    orderItems: { itemId: string; quantity: number; price: number }[];
     total: number;
 };
