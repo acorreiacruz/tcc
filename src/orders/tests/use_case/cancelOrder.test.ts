@@ -64,4 +64,15 @@ describe("Test CancelOrder", () => {
         expect(event.payload.orderId).toBe(orderData.orderId);
         expect(event.payload.userId).toBe(orderData.userId);
     });
+
+    test("Must not cancel the same order twice", async () => {
+        await cancelOrder.execute(cancelOrderCommand);
+        await cancelOrder.execute(cancelOrderCommand);
+        const outbox = await dbClient.orderOutbox.findMany({
+            where: {
+                status: "pending",
+            },
+        });
+        expect(outbox.length).toBe(1);
+    });
 });
