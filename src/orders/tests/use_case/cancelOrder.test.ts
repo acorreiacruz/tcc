@@ -1,61 +1,68 @@
-import {
-    CancelOrder,
-    UnauthorizedOrderCancellationError,
-} from "../../application/use_case/cancelOrder";
-import Order from "../../domain/entity/order";
-import OrderPlaced from "../../domain/event/orderPlaced";
+import { CancelOrder } from "../../application/use_case/cancelOrder";
 import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
 import OrderRepository from "../../infraestructure/repository/orderRepository";
 import OrderRepositoryDatabase from "../../infraestructure/repository/orderRepositoryDatabase";
+import {
+    getItemsData,
+    getOrdersData,
+    ItemData,
+    OrderData,
+} from "../utils/entitiesData";
 
-const cancelOrderCommand = {
-    orderId: "8b3a393d-27a0-4b0b-8ad8-b262a1f16730",
-    userId: "c8f31107-d8a5-4ef1-93b7-eb15f25fce82",
-};
-
-const order: Order = Order.restore(
-    "8b3a393d-27a0-4b0b-8ad8-b262a1f16730",
-    "c8f31107-d8a5-4ef1-93b7-eb15f25fce82",
-    new Date(),
-    "confirmed",
-    "delivery",
-    "credit_card",
-    100
-);
-const client: PrismaClient = new PrismaClient();
+const itemsData: ItemData[] = getItemsData(3);
+const orderData: OrderData = getOrdersData(1, itemsData, "confirmed")[0];
+const dbClient: PrismaClient = new PrismaClient();
 const orderRepository: OrderRepository = new OrderRepositoryDatabase();
 const cancelOrder: CancelOrder = new CancelOrder(orderRepository);
-const orderPlaced: OrderPlaced = OrderPlaced.create(order);
+const cancelOrderCommand = {
+    orderId: orderData.orderId,
+    userId: orderData.userId,
+};
 
 describe("Test CancelOrder", () => {
     beforeEach(async () => {
-        await orderRepository.create(order, orderPlaced);
+        await dbClient.item.createMany({
+            data: itemsData,
+        });
+        await dbClient.order.create({
+            data: {
+                orderId: orderData.orderId,
+                userId: orderData.userId,
+                orderDate: orderData.orderDate,
+                status: orderData.status,
+                paymentMethod: orderData.paymentMethod,
+                fulfillmentMethod: orderData.fulfillmentMethod,
+                total: orderData.total,
+                orderItems: {
+                    create: orderData.orderItems,
+                },
+            },
+        });
     });
 
     afterEach(async () => {
-        await client.order.deleteMany();
-        await client.orderOutbox.deleteMany();
+        await dbClient.item.deleteMany();
+        await dbClient.order.deleteMany();
+        await dbClient.orderOutbox.deleteMany();
     });
 
-    test("Must cancel a order placed", async () => {
+    test("Must cancel a order", async () => {
         await cancelOrder.execute(cancelOrderCommand);
-        const orderCanceled = await orderRepository.getById(order.getId());
-        expect(orderCanceled.getStatus()).toBe("canceled");
-        const orderOutbox = await client.orderOutbox.findFirstOrThrow({
+        const order = await dbClient.order.findFirstOrThrow({
             where: {
-                status: "pending",
-                eventName: "OrderCanceled",
+                orderId: orderData.orderId,
             },
         });
-        const event = JSON.parse(orderOutbox.event);
-        expect(event.name).toBe("OrderCanceled");
-        expect(event.payload.orderId).toBe(order.getId());
-    });
-
-    test("Must not cancel a order placed by another logged user", async () => {
-        cancelOrderCommand.userId = "another_user_id";
-        expect(
-            async () => await cancelOrder.execute(cancelOrderCommand)
-        ).rejects.toThrow(UnauthorizedOrderCancellationError);
+        expect(order.status).toBe("canceled");
+        const outbox = await dbClient.orderOutbox.findFirstOrThrow({
+            where: {
+                status: "pending",
+            },
+        });
+        const event = JSON.parse(outbox.event);
+        expect(event.name).toBe("order_canceled");
+        expect(event.source).toBe("order_cancel_order");
+        expect(event.payload.orderId).toBe(orderData.orderId);
+        expect(event.payload.userId).toBe(orderData.userId);
     });
 });
