@@ -1,13 +1,14 @@
 import Order from "../../domain/entity/order";
 import DomainEvent from "../../../common/domainEvent";
 import OrderRepository from "./orderRepository";
+import PrismaClientSingleton from "../orm/prismaClientSingleton";
 import { PrismaClient } from "../orm/prisma/prisma-client";
 
 export default class OrderRepositoryDatabase implements OrderRepository {
     private client: PrismaClient;
 
     constructor() {
-        this.client = new PrismaClient();
+        this.client = PrismaClientSingleton.getInstance();
     }
 
     async getById(orderId: string): Promise<Order> {
@@ -65,7 +66,7 @@ export default class OrderRepositoryDatabase implements OrderRepository {
                 paymentMethod: order.getPaymentMethod(),
                 fulfillmentMethod: order.getFulfillmentMethod(),
                 total: order.getTotal(),
-            }
+            },
         });
         const orderOutboxCreation = this.client.orderOutbox.create({
             data: {
