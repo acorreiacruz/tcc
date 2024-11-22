@@ -8,7 +8,9 @@ import {
     InvalidTotalOrderError,
     OrderAlreadyCanceledError,
     OrderAlreadyConfirmedError,
+    OrderAlreadyPreparedError,
     OrderConfirmTransitionError,
+    OrderPrepareTransitionError,
 } from "./order.errors";
 
 export default class Order {
@@ -105,10 +107,10 @@ export default class Order {
     }
 
     prepare(): void {
-        if (this.status != "confirmed")
-            throw new Error(
-                "It is impossible set Order status as 'ready' if is not 'confirmed'"
-            );
+        if (this.status === OrderStatus.Ready)
+            throw new OrderAlreadyPreparedError();
+        if (this.status != OrderStatus.Confirmed)
+            throw new OrderPrepareTransitionError();
         this.status = "ready";
     }
 
