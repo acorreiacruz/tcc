@@ -111,7 +111,7 @@ describe("Unit testing Order", () => {
     });
 
     test("Must not confirm Order that has not a 'pending' status", () => {
-        status = "confirmed";
+        status = OrderStatus.OutForDelivery;
         const order = Order.restore(
             orderId,
             userId,
@@ -121,10 +121,7 @@ describe("Unit testing Order", () => {
             paymentMethod,
             100
         );
-        expect(order.getStatus()).toBe("confirmed");
-        expect(() => order.confirm()).toThrow(
-            "It is impossible set Order status as 'confirmed' if is not 'pending'"
-        );
+        expect(() => order.confirm()).toThrow(OrderConfirmTransitionError);
     });
 
     test("Must prepare a confirmed Order", () => {
