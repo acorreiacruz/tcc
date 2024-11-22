@@ -61,7 +61,7 @@ export default class OrderOutboxProcessor {
                     `There is no destination information associated with the event: ${orderOutbox.eventName}`
                 );
             const result = await this.messageBroker.publish(
-                orderOutbox.payload,
+                orderOutbox.event,
                 destinationInformation.exchange,
                 destinationInformation.routingKey
             );
