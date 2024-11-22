@@ -1,5 +1,7 @@
 import { CancelOrder } from "../../application/use_case/cancelOrder";
+import { UnauthorizedOrderUpdateError } from "../../application/use_case/errors";
 import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
+import PrismaClientSingleton from "../../infraestructure/orm/prismaClientSingleton";
 import OrderRepository from "../../infraestructure/repository/orderRepository";
 import OrderRepositoryDatabase from "../../infraestructure/repository/orderRepositoryDatabase";
 import {
@@ -12,7 +14,7 @@ import {
 describe("Test CancelOrder", () => {
     const itemsData: ItemData[] = getItemsData(3);
     const orderData: OrderData = getOrdersData(1, itemsData, "confirmed")[0];
-    const dbClient: PrismaClient = new PrismaClient();
+    const dbClient: PrismaClient = PrismaClientSingleton.getInstance();
     const orderRepository: OrderRepository = new OrderRepositoryDatabase();
     const cancelOrder: CancelOrder = new CancelOrder(orderRepository);
     const cancelOrderCommand = {
@@ -74,5 +76,12 @@ describe("Test CancelOrder", () => {
             },
         });
         expect(outbox.length).toBe(1);
+    });
+
+    test("Must not cancel another user's order", async () => {
+        cancelOrderCommand.userId = "another_user_id";
+        expect(
+            async () => await cancelOrder.execute(cancelOrderCommand)
+        ).rejects.toThrow(UnauthorizedOrderUpdateError);
     });
 });
