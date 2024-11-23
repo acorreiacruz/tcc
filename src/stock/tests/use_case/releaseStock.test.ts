@@ -64,8 +64,6 @@ describe("Testing ReleaseStock", () => {
         expect(stock1.totalQuantity).toBe(fixture.stock1TotalQuantity);
         expect(stock2.reservedQuantity).toBe(fixture.stock2ReservedQuantity);
         expect(stock2.totalQuantity).toBe(fixture.stock2TotalQuantity);
-
-        console.log(orderCanceledMock.eventId);
         const outbox = await dbClient.stockOutbox.findFirstOrThrow({
             where: {
                 status: "pending",

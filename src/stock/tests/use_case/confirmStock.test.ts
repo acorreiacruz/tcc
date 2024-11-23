@@ -50,7 +50,6 @@ describe("Testing ConfirmStock", () => {
         expect(stock2.reservedQuantity).toBe(100);
         expect(stock2.totalQuantity).toBe(900);
 
-        console.log(orderConfirmedMock.eventId);
         const outbox = await dbClient.stockOutbox.findFirstOrThrow({
             where: {
                 status: "pending",
