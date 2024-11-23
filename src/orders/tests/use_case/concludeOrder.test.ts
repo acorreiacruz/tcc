@@ -41,6 +41,10 @@ describe("Testing ConcludeOrder", () => {
         await dbClient.orderOutbox.deleteMany();
     });
 
+    afterAll(async () => {
+        await dbClient.$disconnect();
+    });
+
     test("Must conclude a order", async () => {
         await concludeOrder.execute(deliveryConcludedMock);
         const order = await dbClient.order.findFirstOrThrow({
