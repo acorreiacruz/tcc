@@ -4,7 +4,11 @@ import ItemRepositoryDatabase from "../../infraestructure/repository/itemReposit
 import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
 import OrderRepository from "../../infraestructure/repository/orderRepository";
 import ItemRepository from "../../infraestructure/repository/itemRepository";
-import { getItemsData, getOrdersData, getPlaceOrderCommand } from "../utils/entitiesData";
+import {
+    getItemsData,
+    getOrdersData,
+    getPlaceOrderCommand,
+} from "../utils/entitiesData";
 
 describe("Tesing PlaceOrder use case", () => {
     const orderRepository: OrderRepository = new OrderRepositoryDatabase();
@@ -28,6 +32,10 @@ describe("Tesing PlaceOrder use case", () => {
         await dbClient.item.deleteMany();
         await dbClient.order.deleteMany();
         await dbClient.orderOutbox.deleteMany();
+    });
+
+    afterAll(async () => {
+        await dbClient.$disconnect();
     });
 
     test("Must place a order", async () => {
