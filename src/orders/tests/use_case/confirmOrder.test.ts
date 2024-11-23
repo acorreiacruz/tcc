@@ -46,6 +46,10 @@ describe("Testing ConfirmOrder", () => {
         await dbClient.orderOutbox.deleteMany();
     });
 
+    afterAll(async () => {
+        await dbClient.$disconnect();
+    });
+
     test("Must confirm a order", async () => {
         await confirmOrder.execute(paymentConfirmedMock);
         const order = await dbClient.order.findFirstOrThrow({
