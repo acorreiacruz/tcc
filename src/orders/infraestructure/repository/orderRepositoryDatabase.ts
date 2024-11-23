@@ -12,7 +12,7 @@ export default class OrderRepositoryDatabase implements OrderRepository {
     }
 
     async getById(orderId: string): Promise<Order> {
-        const orderData = await this.client.order.findUnique({
+        const orderData = await this.client.order.findFirst({
             where: {
                 orderId: orderId,
             },
