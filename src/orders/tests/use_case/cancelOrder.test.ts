@@ -47,6 +47,10 @@ describe("Test CancelOrder", () => {
         await dbClient.orderOutbox.deleteMany();
     });
 
+    afterAll(async () => {
+        await dbClient.$disconnect();
+    });
+
     test("Must cancel a order", async () => {
         await cancelOrder.execute(cancelOrderCommand);
         const order = await dbClient.order.findFirstOrThrow({
