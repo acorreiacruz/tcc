@@ -65,6 +65,13 @@ export class Delivery {
         return this.location;
     }
 
+    conclude(concludedAt: Date) {
+        if (this.status !== "out_for_delivery")
+            throw new InvalidTransitionToConcludedError();
+        this.concludedAt = concludedAt;
+        this.status = "concluded";
+    }
+
     start(startedAt: Date) {
         if (this.status !== "assigned")
             throw new InvalidTransitionToOutForDeliveryError();
