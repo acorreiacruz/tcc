@@ -1,29 +1,28 @@
 import Item from "../../domain/entity/item";
 import Order from "../../domain/entity/order";
 import OrderPlaced from "../../domain/event/orderPlaced";
-import OrderUpdated from "../../domain/event/orderStatusUpdated";
 import OrderRepository from "../../infraestructure/repository/orderRepository";
 import OrderRepositoryDatabase from "../../infraestructure/repository/orderRepositoryDatabase";
 import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
-
-let orderRepository: OrderRepository = new OrderRepositoryDatabase();
-let client: PrismaClient = new PrismaClient();
-let order = Order.restore(
-    "8d37b5a3-5662-48c0-a84b-b8fade359424",
-    "c419212d-0ffc-486e-a022-fbb8d67367f6",
-    new Date("2024-11-08T19:30:00"),
-    "pending",
-    "delivery",
-    "credit_card",
-    0
-);
-
-let item1 = Item.create("Item 1", "Description Item 1", 15.0);
-let item2 = Item.create("Item 2", "Description Item 2", 35.0);
+import PrismaClientSingleton from "../../infraestructure/orm/prismaClientSingleton";
+import { OrderDomainEventMock } from "../utils/orderDomainEventsMocks";
 
 describe("Testing OrderRepository", () => {
+    let orderRepository: OrderRepository = new OrderRepositoryDatabase();
+    let dbClient: PrismaClient = PrismaClientSingleton.getInstance();
+    let order = Order.restore(
+        "8d37b5a3-5662-48c0-a84b-b8fade359424",
+        "c419212d-0ffc-486e-a022-fbb8d67367f6",
+        new Date("2024-11-08T19:30:00"),
+        "pending",
+        "delivery",
+        "credit_card",
+        0
+    );
+    let item1 = Item.create("Item 1", "Description Item 1", 15.0);
+    let item2 = Item.create("Item 2", "Description Item 2", 35.0);
     beforeEach(async () => {
-        await client.item.createMany({
+        await dbClient.item.createMany({
             data: [
                 {
                     itemId: item1.getId(),
@@ -42,9 +41,13 @@ describe("Testing OrderRepository", () => {
     });
 
     afterEach(async () => {
-        await client.item.deleteMany();
-        await client.orderOutbox.deleteMany();
-        await client.order.deleteMany();
+        await dbClient.item.deleteMany();
+        await dbClient.orderOutbox.deleteMany();
+        await dbClient.order.deleteMany();
+    });
+
+    afterAll(async () => {
+        await dbClient.$disconnect();
     });
 
     test("Must create a Order and get it by id", async () => {
@@ -58,14 +61,16 @@ describe("Testing OrderRepository", () => {
     test("Must throw a error when there is no Order with specific id", async () => {
         expect(
             async () => await orderRepository.getById(order.getId())
-        ).rejects.toThrow(new Error(`There is no order with this id: ${order.getId()}`));
+        ).rejects.toThrow(
+            new Error(`There is no order with this id: ${order.getId()}`)
+        );
     });
 
     test("Must update a Order", async () => {
         await orderRepository.create(order, OrderPlaced.create(order));
         order.addItem(item1, 3);
         order.addItem(item2, 4);
-        await orderRepository.update(order, OrderUpdated.create(order, "OrderUdated"));
+        await orderRepository.update(order, new OrderDomainEventMock());
         const orderUpdated = await orderRepository.getById(order.getId());
         expect(orderUpdated.getTotal()).toBe(185);
         expect(order.getOrderItems().length).toBe(2);
