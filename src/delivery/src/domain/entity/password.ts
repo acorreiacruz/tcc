@@ -9,6 +9,10 @@ export class Password {
         this.value = value;
     }
 
+    getValue(): string {
+        return this.value;
+    }
+
     static isStrong(value: string): boolean {
         return Password.Format.test(value);
     }
@@ -29,5 +33,14 @@ export class Password {
         const passwordHash = await Password.hashPassword(plainPassword);
         return new Password(passwordHash);
     }
+}
+
+
+export class InvalidPasswordError extends Error {
+    constructor() {
+        super(
+            "The password must be at least 8 characters long, including upper and lower case letters, numbers and special characters."
+        );
+        this.name = "InvalidPasswordError";
 }
 }
