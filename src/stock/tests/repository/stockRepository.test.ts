@@ -3,45 +3,47 @@ import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
 import StockRepository from "../../infraestructure/repository/stockRepository";
 import StockRepositoryDataBase from "../../infraestructure/repository/stockRepositoryDatabase";
 import DomainEvent from "../../../common/domainEvent";
-
-const connection: PrismaClient = new PrismaClient();
-const stockRepository: StockRepository = new StockRepositoryDataBase();
-const stock1 = Stock.restore(
-    "bd4faf47-27ed-4945-b0bf-910fd1dc9603",
-    "810028d5-0650-47b4-a30f-d957c812a855",
-    100,
-    50
-);
-const stock2 = Stock.restore(
-    "dc750505-100a-4350-8cf7-172f4f05726b",
-    "69565c0b-cf0e-4bd3-a484-a04b6f68f978",
-    500,
-    10
-);
-
-class DomainEventMock extends DomainEvent {
-    constructor() {
-        super(
-            "2170aa2b-21e0-41c8-a97d-f13b391ba328",
-            "250beb0f-954d-4d4c-aeff-d4e0289d005d",
-            "DomainEventMock",
-            new Date(),
-            "Mock",
-            {}
-        );
-    }
-}
+import PrismaClientSingleton from "../../infraestructure/orm/prisma/prismaClientSingleton";
 
 describe("Testing StockRepository", () => {
+    const dbClient: PrismaClient = PrismaClientSingleton.getInstance();
+    const stockRepository: StockRepository = new StockRepositoryDataBase();
+    const stock1 = Stock.restore(
+        "bd4faf47-27ed-4945-b0bf-910fd1dc9603",
+        "810028d5-0650-47b4-a30f-d957c812a855",
+        100,
+        50
+    );
+    const stock2 = Stock.restore(
+        "dc750505-100a-4350-8cf7-172f4f05726b",
+        "69565c0b-cf0e-4bd3-a484-a04b6f68f978",
+        500,
+        10
+    );
+
+    class DomainEventMock extends DomainEvent {
+        constructor() {
+            super(
+                "2170aa2b-21e0-41c8-a97d-f13b391ba328",
+                "250beb0f-954d-4d4c-aeff-d4e0289d005d",
+                "DomainEventMock",
+                new Date(),
+                "Mock",
+                {}
+            );
+        }
+    }
     beforeEach(async () => {
-        await connection.stock.createMany({
+        await dbClient.stock.createMany({
             data: [stock1.toJSON(), stock2.toJSON()],
         });
     });
-
     afterEach(async () => {
-        await connection.stock.deleteMany();
-        await connection.stockOutbox.deleteMany();
+        await dbClient.stock.deleteMany();
+        await dbClient.stockOutbox.deleteMany();
+    });
+    afterAll(async () => {
+        await dbClient.$disconnect();
     });
 
     test("Must get Stocks by item id's", async () => {
