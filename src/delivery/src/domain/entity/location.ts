@@ -27,4 +27,11 @@ export class Location {
     getLongitude(): number {
         return this.longitude;
     }
+
+    toJSON(): any {
+        return {
+            latitude: this.latitude,
+            longitude: this.longitude,
+        };
+    }
 }
