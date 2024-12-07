@@ -1,3 +1,12 @@
+export class InvalidTransitionToConcludedError extends Error {
+    constructor() {
+        super(
+            "It only is possible to change the status from 'out_for_delivery' to 'concluded'"
+        );
+        this.name = "InvalidTransitionToConcludedError";
+    }
+}
+
 export class InvalidTransitionToAssignedError extends Error {
     constructor() {
         super(
