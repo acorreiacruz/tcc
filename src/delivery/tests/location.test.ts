@@ -8,4 +8,13 @@ describe("Testing Location", () => {
         expect(location.getLatitude()).toBe(latitude);
         expect(location.getLongitude()).toBe(longitude);
     });
+
+    test("Must not create a Location with invalid latitude value", () => {
+        longitude = 150;
+        latitude = 91.567;
+        expect(() => new Location(latitude, longitude)).toThrow(
+            InvalidLatitudeError
+        );
+    });
+
 });
