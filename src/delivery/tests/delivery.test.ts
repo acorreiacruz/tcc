@@ -14,6 +14,7 @@ describe("Test Delivery", () => {
     let orderId: string = "b950de87-a253-4766-bb02-e3bbdc11861a";
     let location: Location = new Location(35.78, 45.98);
     let startedAt: Date = new Date("2024-12-20T12:00:00");
+    let concludedAt: Date = new Date("2024-12-20T15:30:00");
     let deliveryPersonId: string = "ba9c6901-d438-49fb-847a-dffd39ead777";
     let delivery: Delivery;
 
@@ -123,5 +124,17 @@ describe("Test Delivery", () => {
         delivery.fail();
         expect(delivery.getAttempts()).toBe(1);
         expect(delivery.getStatus()).toBe("failed");
+    });
+
+    test("Must not fail a Delivery when the status is not 'out_for_delivery'", () => {
+        status = "on_hold"
+        delivery = Delivery.restore(
+            deliveryId,
+            orderId,
+            status,
+            attempts,
+            location
+        );
+        expect(() => delivery.fail()).toThrow(InvalidTransitionToFailedError);
     });
 });
