@@ -2,12 +2,13 @@ import DomainEvent from "../../../common/domainEvent";
 import Stock from "../../domain/entity/stock";
 import StockRepository from "./stockRepository";
 import { PrismaClient } from "../orm/prisma/prisma-client";
+import PrismaClientSingleton from "../orm/prisma/prismaClientSingleton";
 
 export default class StockRepositoryDataBase implements StockRepository {
     private connection: PrismaClient;
 
     constructor() {
-        this.connection = new PrismaClient();
+        this.connection = PrismaClientSingleton.getInstance();
     }
 
     async update(stocks: Stock[], event: DomainEvent): Promise<void> {

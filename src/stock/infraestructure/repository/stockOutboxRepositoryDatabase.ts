@@ -2,11 +2,12 @@ import DomainEvent from "../../../common/domainEvent";
 import Outbox from "../../../common/outbox";
 import OutboxRepository from "../../../common/outboxRepository";
 import { PrismaClient } from "../orm/prisma/prisma-client";
+import PrismaClientSingleton from "../orm/prisma/prismaClientSingleton";
 
 export default class StockOutboxRepositoryDatabase implements OutboxRepository {
     private connection: PrismaClient;
     constructor() {
-        this.connection = new PrismaClient();
+        this.connection = PrismaClientSingleton.getInstance();
     }
 
     async create(event: DomainEvent): Promise<void> {
