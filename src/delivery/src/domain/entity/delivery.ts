@@ -65,6 +65,13 @@ export class Delivery {
         return this.location;
     }
 
+    start(startedAt: Date) {
+        if (this.status !== "assigned")
+            throw new InvalidTransitionToOutForDeliveryError();
+        this.startedAt = startedAt;
+        this.status = "out_for_delivery";
+    }
+
     assign(deliveryPersonId: string): void {
         if (this.status != "on_hold")
             throw new InvalidTransitionToAssignedError();
