@@ -9,6 +9,7 @@ import {
     OrderAlreadyCanceledError,
     OrderAlreadyConfirmedError,
     OrderConfirmTransitionError,
+    OrderPrepareTransitionError,
 } from "../../domain/entity/order.errors";
 
 let orderId: string = crypto.randomUUID();
@@ -155,9 +156,7 @@ describe("Unit testing Order", () => {
             100
         );
         expect(order.getStatus()).toBe("pending");
-        expect(() => order.prepare()).toThrow(
-            "It is impossible set Order status as 'ready' if is not 'confirmed'"
-        );
+        expect(() => order.prepare()).toThrow(OrderPrepareTransitionError);
     });
 
     test("Must cancel a Order", () => {
