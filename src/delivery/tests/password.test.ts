@@ -7,4 +7,9 @@ describe("Testing Password", () => {
         expect(Password.isStrong(plainPassword)).toBeTruthy();
     });
 
+    test("Must validate a weak password value", () => {
+        plainPassword = "pass123";
+        expect(Password.isStrong(plainPassword)).toBeFalsy();
+    });
+
 });
