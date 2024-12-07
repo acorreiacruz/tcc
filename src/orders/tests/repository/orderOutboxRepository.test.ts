@@ -3,21 +3,25 @@ import OutboxRepository from "../../../common/outboxRepository";
 import OrderOutboxRepositoryDatabase from "../../infraestructure/repository/orderOutboxRepositoryDatabase";
 import Outbox from "../../../common/outbox";
 import { OrderDomainEventMock } from "../utils/orderDomainEventsMocks";
-
-let connection: PrismaClient = new PrismaClient();
-let orderOutboxRepository: OutboxRepository =
-    new OrderOutboxRepositoryDatabase();
-const orderDomainEventMock: OrderDomainEventMock = new OrderDomainEventMock();
-let orderOutboxes: Outbox[];
-
+import PrismaClientSingleton from "../../infraestructure/orm/prismaClientSingleton";
 
 describe("Testing OrderOutboxRepository", () => {
+    let dbClient: PrismaClient = PrismaClientSingleton.getInstance();
+    let orderOutboxRepository: OutboxRepository =
+        new OrderOutboxRepositoryDatabase();
+    const orderDomainEventMock: OrderDomainEventMock =
+        new OrderDomainEventMock();
+    let orderOutboxes: Outbox[];
     beforeEach(async () => {
         await orderOutboxRepository.create(orderDomainEventMock);
     });
 
     afterEach(async () => {
-        await connection.orderOutbox.deleteMany();
+        await dbClient.orderOutbox.deleteMany();
+    });
+
+    afterAll(async () => {
+        await dbClient.$disconnect();
     });
 
     test("Must create a OrderOutbox record from any order domain event", async () => {
