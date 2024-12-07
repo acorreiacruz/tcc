@@ -1,4 +1,5 @@
 import { Location } from "../src/domain/entity/location";
+import { InvalidLatitudeError, InvalidLongitudeError } from "../src/domain/entity/location.errors";
 describe("Testing Location", () => {
     let location: Location;
     let latitude: number = -5.097822;
@@ -17,4 +18,11 @@ describe("Testing Location", () => {
         );
     });
 
+    test("Must not create a Location with invalid longitude value", () => {
+        latitude = 45.98;
+        longitude = 180.567;
+        expect(() => new Location(latitude, longitude)).toThrow(
+            InvalidLongitudeError
+        );
+    });
 });
