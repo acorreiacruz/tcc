@@ -96,4 +96,18 @@ describe("Test Delivery", () => {
         expect(delivery.getConcludedAt()).toBe(concludedAt);
         expect(delivery.getStatus()).toBe("concluded");
     });
+
+    test("Must not conclude a Delivery when the status is not 'out_for_delivery'", () => {
+        status = "failed";
+        delivery = Delivery.restore(
+            deliveryId,
+            orderId,
+            status,
+            attempts,
+            location
+        );
+        expect(() => delivery.conclude(concludedAt)).toThrow(
+            InvalidTransitionToConcludedError
+        );
+    });
 });
