@@ -28,4 +28,18 @@ describe("Test Delivery", () => {
         expect(delivery.getDeliveryPersonId()).toBe(deliveryPersonId);
     });
 
+    test("Must not assign a delivery person to a Delivery that is not 'on_hold'", () => {
+        status = "failed";
+        delivery = Delivery.restore(
+            deliveryId,
+            orderId,
+            status,
+            attempts,
+            location
+        );
+        expect(() => delivery.assign(deliveryPersonId)).toThrow(
+            InvalidTransitionToAssignedError
+        );
+    });
+
 });
