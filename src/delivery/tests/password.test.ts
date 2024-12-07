@@ -1,3 +1,5 @@
+import { InvalidPasswordError, Password } from "../src/domain/entity/password";
+
 describe("Testing Password", () => {
     let password: Password;
     let plainPassword: string;
@@ -20,5 +22,12 @@ describe("Testing Password", () => {
             password.getValue()
         );
         expect(isEqual).toBeTruthy();
+    });
+
+    test("Must not create a invalid Password", async () => {
+        plainPassword = "password";
+        expect(
+            async () => await Password.create(plainPassword)
+        ).rejects.toThrow(InvalidPasswordError);
     });
 });
