@@ -42,4 +42,17 @@ describe("Test Delivery", () => {
         );
     });
 
+    test("Must start a Delivery", () => {
+        status = "assigned";
+        delivery = Delivery.restore(
+            deliveryId,
+            orderId,
+            status,
+            attempts,
+            location
+        );
+        delivery.start(startedAt);
+        expect(delivery.getStartedAt()).toBe(startedAt);
+        expect(delivery.getStatus()).toBe("out_for_delivery");
+    });
 });
