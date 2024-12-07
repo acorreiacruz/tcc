@@ -5,3 +5,9 @@ export class InvalidLatitudeError extends Error {
     }
 }
 
+export class InvalidLongitudeError extends Error {
+    constructor() {
+        super("Invalid longitude value");
+        this.name = "InvalidLongitudeError";
+    }
+}
