@@ -12,4 +12,12 @@ describe("Test Delivery", () => {
         expect(delivery.getConcludedAt()).toBeUndefined();
         expect(delivery.getLocation()).toEqual(location);
     });
+
+    test("Must update Delivery location", () => {
+        delivery = Delivery.create(orderId, location);
+        const newLocation = new Location(45.90, 108.89);
+        delivery.updateLocation(newLocation);
+        expect(delivery.getLocation()).toEqual(newLocation);
+    });
+
 });
