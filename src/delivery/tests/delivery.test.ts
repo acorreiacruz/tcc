@@ -1,9 +1,22 @@
+import { Delivery, DeliveryStatus } from "../src/domain/entity/delivery";
+import {
+    InvalidTransitionToAssignedError,
+    InvalidTransitionToConcludedError,
+    InvalidTransitionToFailedError,
+    InvalidTransitionToOutForDeliveryError,
+} from "../src/domain/entity/delivery.errors";
 import { Location } from "../src/domain/entity/location";
 
 describe("Test Delivery", () => {
+    let deliveryId: string = "bc036acb-1221-4c8b-abb0-17bf6e9e11f7";
+    let attempts = 0;
+    let status: DeliveryStatus = "on_hold";
     let orderId: string = "b950de87-a253-4766-bb02-e3bbdc11861a";
     let location: Location = new Location(35.78, 45.98);
+    let startedAt: Date = new Date("2024-12-20T12:00:00");
     let deliveryPersonId: string = "ba9c6901-d438-49fb-847a-dffd39ead777";
+    let delivery: Delivery;
+
     test("Must create a Delivery", () => {
         delivery = Delivery.create(orderId, location);
         expect(delivery.getAttempts()).toBe(0);
@@ -54,5 +67,19 @@ describe("Test Delivery", () => {
         delivery.start(startedAt);
         expect(delivery.getStartedAt()).toBe(startedAt);
         expect(delivery.getStatus()).toBe("out_for_delivery");
+    });
+
+    test("Must not start a Delivery when the status is not 'assigned'", () => {
+        status = "failed";
+        delivery = Delivery.restore(
+            deliveryId,
+            orderId,
+            status,
+            attempts,
+            location
+        );
+        expect(() => delivery.start(startedAt)).toThrow(
+            InvalidTransitionToOutForDeliveryError
+        );
     });
 });
