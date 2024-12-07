@@ -82,4 +82,18 @@ describe("Test Delivery", () => {
             InvalidTransitionToOutForDeliveryError
         );
     });
+
+    test("Must conclude a Delivery", () => {
+        status = "out_for_delivery";
+        delivery = Delivery.restore(
+            deliveryId,
+            orderId,
+            status,
+            attempts,
+            location
+        );
+        delivery.conclude(concludedAt);
+        expect(delivery.getConcludedAt()).toBe(concludedAt);
+        expect(delivery.getStatus()).toBe("concluded");
+    });
 });
