@@ -65,6 +65,12 @@ export class Delivery {
         return this.location;
     }
 
+    assign(deliveryPersonId: string): void {
+        if (this.status != "on_hold")
+            throw new InvalidTransitionToAssignedError();
+        this.deliveryPersonId = deliveryPersonId;
+        this.status = "assigned";
+    }
 
     static create(orderId: string, location: Location): Delivery {
         const id = crypto.randomUUID();
