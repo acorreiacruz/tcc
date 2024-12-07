@@ -1,5 +1,19 @@
+import {
+    InvalidTransitionToAssignedError,
+    InvalidTransitionToConcludedError,
+    InvalidTransitionToFailedError,
+    InvalidTransitionToOutForDeliveryError,
+} from "./delivery.errors";
 import { Location } from "./location";
 import crypto from "crypto";
+
+export type DeliveryStatus =
+    | "out_for_delivery"
+    | "concluded"
+    | "failed"
+    | "assigned"
+    | "on_hold";
+
 export class Delivery {
     private id: string;
     private orderId: string;
@@ -79,6 +93,13 @@ export class Delivery {
         this.status = "out_for_delivery";
     }
 
+    fail(): void {
+        if (this.status !== "out_for_delivery")
+            throw new InvalidTransitionToFailedError();
+        this.status = "failed";
+        this.attempts += 1;
+    }
+
     assign(deliveryPersonId: string): void {
         if (this.status != "on_hold")
             throw new InvalidTransitionToAssignedError();
@@ -93,4 +114,38 @@ export class Delivery {
         return new Delivery(id, orderId, status, attempts, location);
     }
 
+    static restore(
+        id: string,
+        orderId: string,
+        status: DeliveryStatus,
+        attempts: number,
+        location: Location,
+        deliveryPersonId?: string,
+        startedAt?: Date,
+        concludedAt?: Date
+    ): Delivery {
+        return new Delivery(
+            id,
+            orderId,
+            status,
+            attempts,
+            location,
+            deliveryPersonId,
+            startedAt,
+            concludedAt
+        );
+    }
+
+    toJSON(): any {
+        return {
+            id: this.id,
+            orderId: this.orderId,
+            status: this.status,
+            attempts: this.attempts,
+            location: this.location.toJSON(),
+            deliveryPersonId: this.deliveryPersonId,
+            startedAt: this.startedAt,
+            concludedAt: this.concludedAt,
+        };
+    }
     }
