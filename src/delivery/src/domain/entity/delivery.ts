@@ -57,6 +57,10 @@ export class Delivery {
         return this.status;
     }
 
+    updateLocation(location: Location): void {
+        this.location = location;
+    }
+
     getLocation(): Location {
         return this.location;
     }
