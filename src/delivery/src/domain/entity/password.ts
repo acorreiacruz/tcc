@@ -42,5 +42,5 @@ export class InvalidPasswordError extends Error {
             "The password must be at least 8 characters long, including upper and lower case letters, numbers and special characters."
         );
         this.name = "InvalidPasswordError";
-}
+    }
 }
