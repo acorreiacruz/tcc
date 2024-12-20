@@ -12,4 +12,17 @@ describe("Testing Email", () => {
         expect(email.getValue()).toBe(emailAddress);
     });
 
+    test.each([
+        "teste@teste",
+        "@domain.com",
+        "user@.com",
+        "user@domain.",
+        "user@domain",
+        "user domain@com",
+        "",
+        "user@@domain.com",
+        "@",
+    ])("Must not create an email with invalid format", (invalidEmail) => {
+        expect(() => new Email(invalidEmail)).toThrow(InvalidEmailError);
+    });
 });
