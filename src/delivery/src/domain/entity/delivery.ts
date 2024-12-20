@@ -148,4 +148,4 @@ export class Delivery {
             concludedAt: this.concludedAt,
         };
     }
-    }
+}
