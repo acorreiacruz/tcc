@@ -1,33 +1,42 @@
 import { InvalidPasswordError, Password } from "../src/domain/entity/password";
 
 describe("Testing Password", () => {
-    let password: Password;
-    let plainPassword: string;
-
-    test("Must validate a strong password value", () => {
-        plainPassword = "P@ssword123#";
-        expect(Password.isStrong(plainPassword)).toBeTruthy();
+    test.each([
+        ["P@ssword123#"],
+        ["Senha$2023!"],
+        ["Test@1234#"],
+        ["C0mpl3x@Pass"],
+        ["Sup3r$Str0ng!"],
+    ])("Must validate password format", (password) => {
+        expect(Password.isStrong(password)).toBeTruthy();
     });
 
-    test("Must validate a weak password value", () => {
-        plainPassword = "pass123";
-        expect(Password.isStrong(plainPassword)).toBeFalsy();
+    test.each([
+        [""],
+        ["P@ss1"],
+        ["senha123"],
+        ["Senha123"],
+        ["Senha@especial"],
+        ["senha@123"],
+        ["12345@#$%"],
+    ])("Must not create a invalid Password", async (password) => {
+        expect(async () => await Password.create(password)).rejects.toThrow(
+            InvalidPasswordError
+        );
     });
 
-    test("Must create a Password", async () => {
-        plainPassword = "P@ssword123#";
-        password = await Password.create(plainPassword);
+    test.each([
+        ["P@ssword123#"],
+        ["Senha$2023!"],
+        ["Test@1234#"],
+        ["C0mpl3x@Pass"],
+        ["Sup3r$Str0ng!"],
+    ])("Must create a Password", async (password) => {
+        const passwordCreated = await Password.create(password);
         const isEqual = await Password.isEqual(
-            plainPassword,
-            password.getValue()
+            password,
+            passwordCreated.getValue()
         );
         expect(isEqual).toBeTruthy();
-    });
-
-    test("Must not create a invalid Password", async () => {
-        plainPassword = "password";
-        expect(
-            async () => await Password.create(plainPassword)
-        ).rejects.toThrow(InvalidPasswordError);
     });
 });
