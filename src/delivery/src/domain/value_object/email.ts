@@ -9,5 +9,14 @@ export class Email {
         return this.email;
     }
 
+    static isValid(email: string): boolean {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
 }
 
+export class InvalidEmailError extends Error {
+    constructor() {
+        super("Invalid email");
+        this.name = "InvalidEmailError";
+    }
+}
