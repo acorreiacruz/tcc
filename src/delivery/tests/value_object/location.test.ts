@@ -1,5 +1,5 @@
-import { Location } from "../src/domain/value_object/location";
-import { InvalidLatitudeError, InvalidLongitudeError } from "../src/domain/value_object/location";
+import { Location } from "../../src/domain/value_object/location";
+import { InvalidLatitudeError, InvalidLongitudeError } from "../../src/domain/value_object/location";
 describe("Testing Location", () => {
     let location: Location;
     let latitude: number = -5.097822;

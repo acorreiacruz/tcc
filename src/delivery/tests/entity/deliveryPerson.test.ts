@@ -2,10 +2,10 @@ import {
     DeliveryPerson,
     InvalidTransitionToOnDeliveryError,
     InvalidTransitionToOfflineError,
-} from "../src/domain/entity/deliveryPerson";
-import { Location } from "../src/domain/value_object/location";
-import { InvalidEmailError } from "../src/domain/value_object/email";
-import { InvalidPhoneNumberError } from "../src/domain/value_object/phoneNumber";
+} from "../../src/domain/entity/deliveryPerson";
+import { Location } from "../../src/domain/value_object/location";
+import { InvalidEmailError } from "../../src/domain/value_object/email";
+import { InvalidPhoneNumberError } from "../../src/domain/value_object/phoneNumber";
 
 describe("Testing DeliveryPerson", () => {
     const deliveryPersonData = {

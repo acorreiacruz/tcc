@@ -1,7 +1,7 @@
 import {
     InvalidPasswordError,
     Password,
-} from "../src/domain/value_object/password";
+} from "../../src/domain/value_object/password";
 
 describe("Testing Password", () => {
     test.each([

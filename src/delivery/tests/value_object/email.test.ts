@@ -1,4 +1,4 @@
-import { Email, InvalidEmailError } from "../src/domain/value_object/email";
+import { Email, InvalidEmailError } from "../../src/domain/value_object/email";
 
 describe("Testing Email", () => {
     test.each([

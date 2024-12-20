@@ -1,11 +1,11 @@
-import { Delivery, DeliveryStatus } from "../src/domain/entity/delivery";
+import { Delivery, DeliveryStatus } from "../../src/domain/entity/delivery";
 import {
     InvalidTransitionToAssignedError,
     InvalidTransitionToConcludedError,
     InvalidTransitionToFailedError,
     InvalidTransitionToOutForDeliveryError,
-} from "../src/domain/entity/delivery.errors";
-import { Location } from "../src/domain/value_object/location";
+} from "../../src/domain/entity/delivery.errors";
+import { Location } from "../../src/domain/value_object/location";
 
 describe("Test Delivery", () => {
     let deliveryId: string = "bc036acb-1221-4c8b-abb0-17bf6e9e11f7";
