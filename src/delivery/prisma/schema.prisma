@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = env("DELIVERY_PRISMA_CLIENT")
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DELIVERY_POSTGRES_URL")
+}
+
+model DeliveryPerson {
+  id               String    @id @db.Uuid
+  phoneNumber      String    @unique
+  passwordHash     String 
+  status           DeliveryPersonStatus
+  currentLocation DeliveryPersonLocation?
+  delivery Delivery []
+  @@index([phoneNumber])
+  @@map("delivery_person")
+}
+
+model Delivery {
+  id          String      @id @db.Uuid
+  orderId     String      @unique    
+  status      DeliveryStatus
+  attempts    Int
+  startedAt   DateTime?
+  concludedAt DateTime?
+  location DeliveryLocation[]
+  deliveryPersonId String? @db.Uuid
+  deliveryPerson DeliveryPerson? @relation(fields: [deliveryPersonId], references: [id], onDelete: Cascade)
+  @@index([orderId])
+  @@map("delivery")
+}
+
+model DeliveryLocation {
+  id        String    @id @db.Uuid @default(uuid())
+  latitude  Float
+  longitude Float
+  deliveryId String @unique @db.Uuid
+  delivery  Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  @@map("delivery_location")
+}
+
+enum DeliveryStatus {
+  out_for_delivery
+  concluded
+  failed
+  assigned
+  on_hold
+}
+
+enum DeliveryPersonStatus {
+  available
+  on_delivery
+  offline
+}
+
+model DeliveryPersonLocation {
+  id        String    @id @db.Uuid @default(uuid())
+  latitude  Float
+  longitude Float
+  deliveryPersonId String @db.Uuid @unique
+  deliveryPerson DeliveryPerson? @relation(fields: [deliveryPersonId], references: [id], onDelete: Cascade)
+  @@map("delivery_person_location")
+}
