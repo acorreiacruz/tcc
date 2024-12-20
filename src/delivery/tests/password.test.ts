@@ -1,4 +1,7 @@
-import { InvalidPasswordError, Password } from "../src/domain/entity/password";
+import {
+    InvalidPasswordError,
+    Password,
+} from "../src/domain/value_object/password";
 
 describe("Testing Password", () => {
     test.each([

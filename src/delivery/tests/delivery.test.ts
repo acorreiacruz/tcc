@@ -5,7 +5,7 @@ import {
     InvalidTransitionToFailedError,
     InvalidTransitionToOutForDeliveryError,
 } from "../src/domain/entity/delivery.errors";
-import { Location } from "../src/domain/entity/location";
+import { Location } from "../src/domain/value_object/location";
 
 describe("Test Delivery", () => {
     let deliveryId: string = "bc036acb-1221-4c8b-abb0-17bf6e9e11f7";

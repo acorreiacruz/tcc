@@ -3,7 +3,7 @@ import {
     InvalidTransitionToOnDeliveryError,
     InvalidTransitionToOfflineError,
 } from "../src/domain/entity/deliveryPerson";
-import { Location } from "../src/domain/entity/location";
+import { Location } from "../src/domain/value_object/location";
 import { InvalidEmailError } from "../src/domain/value_object/email";
 import { InvalidPhoneNumberError } from "../src/domain/value_object/phoneNumber";
 
