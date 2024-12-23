@@ -28,7 +28,8 @@ model Delivery {
   attempts    Int
   startedAt   DateTime?
   concludedAt DateTime?
-  location DeliveryLocation[]
+  location DeliveryLocation @relation(fields: [locationId], references: [id])
+  locationId String @unique @db.Uuid
   deliveryPersonId String? @db.Uuid
   deliveryPerson DeliveryPerson? @relation(fields: [deliveryPersonId], references: [id], onDelete: Cascade)
   @@index([orderId])
@@ -39,8 +40,7 @@ model DeliveryLocation {
   id        String    @id @db.Uuid @default(uuid())
   latitude  Float
   longitude Float
-  deliveryId String @unique @db.Uuid
-  delivery  Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  delivery  Delivery?
   @@map("delivery_location")
 }
 
@@ -49,6 +49,6 @@ model DeliveryPersonLocation {
   latitude  Float
   longitude Float
   deliveryPersonId String @db.Uuid @unique
-  deliveryPerson DeliveryPerson? @relation(fields: [deliveryPersonId], references: [id], onDelete: Cascade)
+  deliveryPerson DeliveryPerson? @relation(fields: [deliveryPersonId], references: [id])
   @@map("delivery_person_location")
 }
