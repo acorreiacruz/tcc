@@ -4,7 +4,7 @@ import {
     InvalidTransitionToFailedError,
     InvalidTransitionToOutForDeliveryError,
 } from "./delivery.errors";
-import { Location } from "./location";
+import { Location } from "../value_object/location";
 import crypto from "crypto";
 
 export type DeliveryStatus =
