@@ -19,6 +19,10 @@ export class PhoneNumber {
     getValue(): string {
         return this.phoneNumber;
     }
+
+    static restore(phoneNumber: string): PhoneNumber {
+        return new PhoneNumber(phoneNumber);
+    }
 }
 
 export class InvalidPhoneNumberError extends Error {
