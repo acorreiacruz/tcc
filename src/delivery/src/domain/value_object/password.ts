@@ -33,6 +33,10 @@ export class Password {
         const passwordHash = await Password.hashPassword(plainPassword);
         return new Password(passwordHash);
     }
+
+    static restore(passwordHash: string): Password {
+        return new Password(passwordHash);
+    }
 }
 
 export class InvalidPasswordError extends Error {
