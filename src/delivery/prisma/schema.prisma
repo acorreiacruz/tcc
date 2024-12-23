@@ -14,7 +14,7 @@ model DeliveryPerson {
   email            String    @unique
   phoneNumber      String    @unique
   passwordHash     String 
-  status           DeliveryPersonStatus
+  status           String
   currentLocation DeliveryPersonLocation?
   delivery Delivery []
   @@index([phoneNumber])
@@ -24,7 +24,7 @@ model DeliveryPerson {
 model Delivery {
   id          String      @id @db.Uuid
   orderId     String      @unique    
-  status      DeliveryStatus
+  status      String
   attempts    Int
   startedAt   DateTime?
   concludedAt DateTime?
@@ -42,20 +42,6 @@ model DeliveryLocation {
   deliveryId String @unique @db.Uuid
   delivery  Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
   @@map("delivery_location")
-}
-
-enum DeliveryStatus {
-  out_for_delivery
-  concluded
-  failed
-  assigned
-  on_hold
-}
-
-enum DeliveryPersonStatus {
-  available
-  on_delivery
-  offline
 }
 
 model DeliveryPersonLocation {
