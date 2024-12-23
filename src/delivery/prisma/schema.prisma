@@ -10,6 +10,8 @@ datasource db {
 
 model DeliveryPerson {
   id               String    @id @db.Uuid
+  fullName         String
+  email            String    @unique
   phoneNumber      String    @unique
   passwordHash     String 
   status           DeliveryPersonStatus
