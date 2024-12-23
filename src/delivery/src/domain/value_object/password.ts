@@ -3,7 +3,7 @@ import * as bcrypt from "bcrypt";
 export class Password {
     static SaltRounds: number = 10;
     static Format =
-        /^(?=.*[A-Z])(?=.*[!@#$)%={+{(&*])(?=.*[0-9])(?=.*[a-z]).{8,}$/;
+        /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?])(?=.*[0-9])(?=.*[a-z]).{8,}$/;
     private value: string;
     private constructor(value: string) {
         this.value = value;
@@ -34,7 +34,6 @@ export class Password {
         return new Password(passwordHash);
     }
 }
-
 
 export class InvalidPasswordError extends Error {
     constructor() {
