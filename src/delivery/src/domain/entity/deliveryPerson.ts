@@ -1,7 +1,7 @@
 import { Email } from "../value_object/email";
 import { PhoneNumber } from "../value_object/phoneNumber";
-import { Location } from "./location";
-import { Password } from "./password";
+import { Location } from "../value_object/location";
+import { Password } from "../value_object/password";
 import crypto from "crypto";
 
 export class DeliveryPerson {
@@ -114,6 +114,37 @@ export class DeliveryPerson {
             status
         );
     }
+
+    static restore(
+        id: string,
+        fullName: string,
+        email: string,
+        phoneNumber: string,
+        password: string,
+        status: DeliveryPersonStatus,
+        currentLocation?: Location
+    ): DeliveryPerson {
+        return new DeliveryPerson(
+            id,
+            fullName,
+            PhoneNumber.restore(phoneNumber),
+            Email.restore(email),
+            Password.restore(password),
+            status,
+            currentLocation
+        );
+    }
+
+    toJSON(): any {
+        return {
+            id: this.id,
+            fullName: this.fullName,
+            email: this.email.getValue(),
+            phoneNumber: this.phoneNumber.getValue(),
+            status: this.status,
+            currentLocation: this.currentLocation?.toJSON(),
+        };
+    }
 }
 
 export type DeliveryPersonStatus = "available" | "offline" | "on_delivery";
@@ -135,7 +166,3 @@ export class InvalidTransitionToOfflineError extends Error {
         this.name = "InvalidTransitionToOfflineError";
     }
 }
-
-
-
-
