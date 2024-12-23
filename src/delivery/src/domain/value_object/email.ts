@@ -12,6 +12,10 @@ export class Email {
     static isValid(email: string): boolean {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
+
+    static restore(email: string): Email {
+        return new Email(email);
+    }
 }
 
 export class InvalidEmailError extends Error {
