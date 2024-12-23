@@ -21,34 +21,48 @@ model DeliveryPerson {
   @@map("delivery_person")
 }
 
-model Delivery {
-  id          String      @id @db.Uuid
-  orderId     String      @unique    
-  status      String
-  attempts    Int
-  startedAt   DateTime?
-  concludedAt DateTime?
-  location DeliveryLocation @relation(fields: [locationId], references: [id])
-  locationId String @unique @db.Uuid
-  deliveryPersonId String? @db.Uuid
+model DeliveryPersonLocation {
+  id        String    @id @db.Uuid @default(uuid())
+  latitude  Float
+  longitude Float
+  deliveryPersonId String @db.Uuid @unique
   deliveryPerson DeliveryPerson? @relation(fields: [deliveryPersonId], references: [id], onDelete: Cascade)
+  @@map("delivery_person_location")
+}
+
+model Delivery {
+  id               String            @id @db.Uuid
+  orderId          String            @unique    
+  status           String
+  attempts         Int
+  startedAt        DateTime?
+  concludedAt      DateTime?
+  deliveryPersonId String?           @db.Uuid
+  deliveryPerson   DeliveryPerson?   @relation(fields: [deliveryPersonId], references: [id], onDelete: Cascade)
+  location         DeliveryLocation  @relation(fields: [locationId], references: [id])
+  locationId       String            @unique @db.Uuid
+
   @@index([orderId])
   @@map("delivery")
 }
 
 model DeliveryLocation {
-  id        String    @id @db.Uuid @default(uuid())
+  id        String     @id @db.Uuid @default(uuid())
   latitude  Float
   longitude Float
   delivery  Delivery?
   @@map("delivery_location")
 }
 
-model DeliveryPersonLocation {
-  id        String    @id @db.Uuid @default(uuid())
-  latitude  Float
-  longitude Float
-  deliveryPersonId String @db.Uuid @unique
-  deliveryPerson DeliveryPerson? @relation(fields: [deliveryPersonId], references: [id])
-  @@map("delivery_person_location")
+
+
+model DeliveryOutbox {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  eventId   String   @unique @db.Uuid
+  eventName String
+  status    String
+  event     String
+  @@map("delivery_outbox")
 }
