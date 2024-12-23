@@ -4,11 +4,11 @@ import { InvalidEmailError } from "../../src/domain/value_object/email";
 import { InvalidPasswordError } from "../../src/domain/value_object/password";
 import { InvalidPhoneNumberError } from "../../src/domain/value_object/phoneNumber";
 import { DeliveryPersonRepository } from "../../src/infraestructure/repository/deliveryPersonRepository";
-import { DeliveryPersonRepositoryInMemory } from "../../src/infraestructure/repository/deliveryPersonRepositoryInMemory";
+import { DeliveryPersonRepositoryDataBase } from "../../src/infraestructure/repository/deliveryPersonRepositoryDataBase";
 
 describe("Testing RegisterDeliveryPerson", () => {
     let deliveryPersonRepository: DeliveryPersonRepository =
-        new DeliveryPersonRepositoryInMemory();
+        new DeliveryPersonRepositoryDataBase();
     let deliveryPerson: DeliveryPerson;
     test("Must register a delivery person", async () => {
         const registerDeliveryPerson = new RegisterDeliveryPerson(
