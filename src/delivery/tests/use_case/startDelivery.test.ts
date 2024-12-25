@@ -9,7 +9,7 @@ import { DeliveryPersonDoesNotMatchError } from "../../src/application/use_case/
 import { Delivery } from "../../src/domain/entity/delivery";
 import { DeliveryPerson } from "../../src/domain/entity/deliveryPerson";
 import { Location } from "../../src/domain/value_object/location";
-import { DeliveryOutboxRepositoryDatabase } from "../../src/infraestructure/repository/deliveryOutboxRepositoryDatabase";
+import DeliveryOutboxRepositoryDatabase  from "../../src/infraestructure/repository/deliveryOutboxRepositoryDatabase";
 import { DeliveryPersonRepositoryDataBase } from "../../src/infraestructure/repository/deliveryPersonRepositoryDataBase";
 import { DeliveryRepositoryDataBase } from "../../src/infraestructure/repository/deliveryRepositoryDataBase";
 import UnitOfWork from "../../src/infraestructure/unitOfWork";
