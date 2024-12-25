@@ -1,11 +1,7 @@
 import { PrismaClient } from "../../prisma/prisma-client";
 import PrismaClientSingleton from "../../prisma/prismaClientSingleton";
-import {
-    DeliveryAlreadyStartedError,
-    StartDelivery,
-    StartDeliveryCommand,
-} from "../../src/application/use_case/startDelivery";
-import { DeliveryPersonDoesNotMatchError } from "../../src/application/use_case/startDelivery";
+import { DeliveryAlreadyStartedError, DeliveryPersonDoesNotMatchError } from "../../src/application/use_case/errors";
+import { StartDelivery, StartDeliveryCommand } from "../../src/application/use_case/startDelivery";
 import { Delivery } from "../../src/domain/entity/delivery";
 import { DeliveryPerson } from "../../src/domain/entity/deliveryPerson";
 import { Location } from "../../src/domain/value_object/location";
