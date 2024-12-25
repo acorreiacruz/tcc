@@ -48,6 +48,7 @@ describe("Testing RegisterDeliveryPerson", () => {
     });
 
     test("Must not register a delivery person with invalid phone number", async () => {
+        command.email = "jhon.doe@email.com"
         command.phoneNumber = "8691111";
         expect(async () => {
             await registerDeliveryPerson.excute(command);
@@ -55,6 +56,7 @@ describe("Testing RegisterDeliveryPerson", () => {
     });
 
     test("Must not register a delivery person with invalid email", async () => {
+        command.phoneNumber = "5586911112222";
         command.email = "teste@com";
         expect(async () => {
             await registerDeliveryPerson.excute(command);
