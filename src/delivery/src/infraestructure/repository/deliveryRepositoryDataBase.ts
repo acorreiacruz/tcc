@@ -6,7 +6,6 @@ import {
     DeliveryRepository,
 } from "./deliveryRepository";
 import { Location } from "../../domain/value_object/location";
-import DomainEvent from "../../../../common/domainEvent";
 
 export class DeliveryRepositoryDataBase implements DeliveryRepository {
     private dbClient: PrismaClient;
@@ -15,12 +14,11 @@ export class DeliveryRepositoryDataBase implements DeliveryRepository {
     }
 
     async getById(deliveryId: string): Promise<Delivery> {
-        const delivery = await this.dbClient.delivery.findUnique({
+        const delivery = await this.dbClient.delivery.findFirst({
             where: {
                 id: deliveryId,
             },
             include: {
-                deliveryPerson: true,
                 location: true,
             },
         });
@@ -40,8 +38,8 @@ export class DeliveryRepositoryDataBase implements DeliveryRepository {
         );
     }
 
-    async create(delivery: Delivery): Promise<void> {
-        await this.dbClient.delivery.create({
+    create(delivery: Delivery): Promise<any> {
+        return this.dbClient.delivery.create({
             data: {
                 id: delivery.getId(),
                 orderId: delivery.getOrderId(),
@@ -53,12 +51,17 @@ export class DeliveryRepositoryDataBase implements DeliveryRepository {
                         longitude: delivery.getLocation().getLongitude(),
                     },
                 },
+                deliveryPerson: {
+                    connect: {
+                        id: delivery.getDeliveryPersonId() ?? undefined,
+                    },
+                },
             },
         });
     }
 
-    async update(delivery: Delivery, event: DomainEvent): Promise<void> {
-        const deliveryUpdate = this.dbClient.delivery.update({
+    update(delivery: Delivery): Promise<any> {
+        return this.dbClient.delivery.update({
             where: {
                 id: delivery.getId(),
             },
@@ -77,16 +80,5 @@ export class DeliveryRepositoryDataBase implements DeliveryRepository {
                 },
             },
         });
-
-        const outboxCreation = this.dbClient.deliveryOutbox.create({
-            data: {
-                eventId: event.eventId,
-                eventName: event.name,
-                status: "pending",
-                event: JSON.stringify(event.toJSON()),
-            },
-        });
-
-        await this.dbClient.$transaction([deliveryUpdate, outboxCreation]);
     }
 }

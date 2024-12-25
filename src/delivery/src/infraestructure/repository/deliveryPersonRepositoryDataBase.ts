@@ -51,8 +51,8 @@ export class DeliveryPersonRepositoryDataBase
         );
     }
 
-    async update(deliveryPerson: DeliveryPerson): Promise<void> {
-        await this.dbClient.deliveryPerson.update({
+    update(deliveryPerson: DeliveryPerson): Promise<any> {
+        return this.dbClient.deliveryPerson.update({
             where: {
                 id: deliveryPerson.getId(),
             },
@@ -66,8 +66,8 @@ export class DeliveryPersonRepositoryDataBase
         });
     }
 
-    async create(deliveryPerson: DeliveryPerson): Promise<void> {
-        await this.dbClient.deliveryPerson.create({
+    create(deliveryPerson: DeliveryPerson): Promise<any> {
+        return this.dbClient.deliveryPerson.create({
             data: {
                 id: deliveryPerson.getId(),
                 fullName: deliveryPerson.getFullName(),
