@@ -1,8 +1,12 @@
 import { PrismaClient } from "../../prisma/prisma-client";
 import PrismaClientSingleton from "../../prisma/prismaClientSingleton";
 import { DeliveryPerson } from "../../src/domain/entity/deliveryPerson";
-import { DeliveryPersonRepository } from "../../src/infraestructure/repository/deliveryPersonRepository";
+import {
+    DeliveryPersonRepository,
+    NotAvailableDeliveryPersonsError,
+} from "../../src/infraestructure/repository/deliveryPersonRepository";
 import { DeliveryPersonRepositoryDataBase } from "../../src/infraestructure/repository/deliveryPersonRepositoryDataBase";
+import { Location } from "../../src/domain/value_object/location";
 
 describe("Testing DeliveryPersonRepository", () => {
     const deliveryPersonRepository: DeliveryPersonRepository =
@@ -38,7 +42,7 @@ describe("Testing DeliveryPersonRepository", () => {
         expect(found.getStatus()).toBe(deliveryPerson.getStatus());
     });
 
-    test("Must update a delivery person", async () => {
+    test("Must update a delivery person except current location", async () => {
         const deliveryPerson = await DeliveryPerson.create(
             "John Doe",
             "john@example.com",
@@ -53,6 +57,22 @@ describe("Testing DeliveryPersonRepository", () => {
         );
         expect(found.getFullName()).toBe("John Updated");
         expect(found.getEmail()).toBe("updated@example.com");
+    });
+
+    test("Must update a delivery person current location", async () => {
+        const deliveryPerson = await DeliveryPerson.create(
+            "John Doe",
+            "john@example.com",
+            "5511999999999",
+            "P@ssword123"
+        );
+        await deliveryPersonRepository.create(deliveryPerson);
+        deliveryPerson.updateLocation(new Location(1, 1));
+        await deliveryPersonRepository.update(deliveryPerson);
+        const found = await deliveryPersonRepository.getById(
+            deliveryPerson.getId()
+        );
+        expect(found.getLocation()).toEqual(new Location(1, 1));
     });
 
     test("Must get delivery persons by status", async () => {
@@ -87,4 +107,11 @@ describe("Testing DeliveryPersonRepository", () => {
         expect(availablePersons[0].getFullName()).toBe("John Doe");
         expect(offlinePersons[0].getFullName()).toBe("Jane Doe");
     });
+
+    test("Must throw error when there is no available delivery persons", async () => {
+        expect(async () => {
+            await deliveryPersonRepository.getByStatus("available");
+        }).rejects.toThrow(NotAvailableDeliveryPersonsError);
+    });
+
 });
