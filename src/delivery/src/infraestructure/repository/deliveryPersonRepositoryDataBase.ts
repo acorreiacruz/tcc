@@ -1,11 +1,15 @@
 import { PrismaClient } from "../../../prisma/prisma-client";
 import PrismaClientSingleton from "../../../prisma/prismaClientSingleton";
-import { DeliveryPerson, DeliveryPersonStatus } from "../../domain/entity/deliveryPerson";
+import {
+    DeliveryPerson,
+    DeliveryPersonStatus,
+} from "../../domain/entity/deliveryPerson";
 import {
     DeliveryPersonNotFoundError,
     DeliveryPersonRepository,
+    NotAvailableDeliveryPersonsError,
 } from "./deliveryPersonRepository";
-
+import { Location } from "../../domain/value_object/location";
 export class DeliveryPersonRepositoryDataBase
     implements DeliveryPersonRepository
 {
@@ -22,6 +26,8 @@ export class DeliveryPersonRepositoryDataBase
                 },
             }
         );
+        if (deliveryPersonsData.length === 0)
+            throw new NotAvailableDeliveryPersonsError();
         return deliveryPersonsData.map((deliveryPersonData) => {
             return DeliveryPerson.restore(
                 deliveryPersonData.id,
@@ -39,6 +45,9 @@ export class DeliveryPersonRepositoryDataBase
             where: {
                 id: deliveryPersonId,
             },
+            include: {
+                currentLocation: true,
+            },
         });
         if (!deliveryPerson) throw new DeliveryPersonNotFoundError();
         return DeliveryPerson.restore(
@@ -47,35 +56,67 @@ export class DeliveryPersonRepositoryDataBase
             deliveryPerson.email,
             deliveryPerson.phoneNumber,
             deliveryPerson.passwordHash,
-            deliveryPerson.status as DeliveryPersonStatus
+            deliveryPerson.status as DeliveryPersonStatus,
+            deliveryPerson.currentLocation
+                ? new Location(
+                      deliveryPerson.currentLocation.latitude,
+                      deliveryPerson.currentLocation.longitude
+                  )
+                : undefined
         );
     }
 
-    update(deliveryPerson: DeliveryPerson): Promise<any> {
+    async update(deliveryPerson: DeliveryPerson): Promise<any> {
+        const updateData: any = {
+            fullName: deliveryPerson.getFullName(),
+            email: deliveryPerson.getEmail(),
+            phoneNumber: deliveryPerson.getPhoneNumber(),
+            passwordHash: deliveryPerson.getPassword(),
+            status: deliveryPerson.getStatus(),
+        };
+
+        if (deliveryPerson.getLocation()) {
+            updateData.currentLocation = {
+                upsert: {
+                    create: {
+                        latitude: deliveryPerson.getLocation()?.getLatitude(),
+                        longitude: deliveryPerson.getLocation()?.getLongitude(),
+                    },
+                    update: {
+                        latitude: deliveryPerson.getLocation()?.getLatitude(),
+                        longitude: deliveryPerson.getLocation()?.getLongitude(),
+                    },
+                },
+            };
+        }
+
         return this.dbClient.deliveryPerson.update({
             where: {
                 id: deliveryPerson.getId(),
             },
-            data: {
-                fullName: deliveryPerson.getFullName(),
-                email: deliveryPerson.getEmail(),
-                phoneNumber: deliveryPerson.getPhoneNumber(),
-                passwordHash: deliveryPerson.getPassword(),
-                status: deliveryPerson.getStatus(),
-            },
+            data: updateData,
         });
     }
 
     create(deliveryPerson: DeliveryPerson): Promise<any> {
+        const createData: any = {
+            id: deliveryPerson.getId(),
+            fullName: deliveryPerson.getFullName(),
+            email: deliveryPerson.getEmail(),
+            phoneNumber: deliveryPerson.getPhoneNumber(),
+            passwordHash: deliveryPerson.getPassword(),
+            status: deliveryPerson.getStatus(),
+        };
+        if (deliveryPerson.getLocation()) {
+            createData.currentLocation = {
+                create: {
+                    latitude: deliveryPerson.getLocation()?.getLatitude(),
+                    longitude: deliveryPerson.getLocation()?.getLongitude(),
+                },
+            };
+        }
         return this.dbClient.deliveryPerson.create({
-            data: {
-                id: deliveryPerson.getId(),
-                fullName: deliveryPerson.getFullName(),
-                email: deliveryPerson.getEmail(),
-                phoneNumber: deliveryPerson.getPhoneNumber(),
-                passwordHash: deliveryPerson.getPassword(),
-                status: deliveryPerson.getStatus(),
-            },
+            data: createData,
         });
     }
 }
