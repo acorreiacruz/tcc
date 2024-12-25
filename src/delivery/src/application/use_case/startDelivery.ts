@@ -2,6 +2,7 @@ import { Delivery } from "../../domain/entity/delivery";
 import { DeliveryPerson } from "../../domain/entity/deliveryPerson";
 import DeliveryStarted from "../../domain/event/deliveryStarted";
 import UnitOfWork from "../../infraestructure/unitOfWork";
+import { DeliveryAlreadyStartedError, DeliveryPersonDoesNotMatchError } from "./errors";
 
 export class StartDelivery {
     constructor(private readonly unitOfWork: UnitOfWork) {}
@@ -32,17 +33,3 @@ export type StartDeliveryCommand = {
     deliveryPersonId: string;
     startedAt: Date;
 };
-
-export class DeliveryAlreadyStartedError extends Error {
-    constructor() {
-        super("Delivery already started");
-        this.name = "DeliveryAlreadyStartedError";
-    }
-}
-
-export class DeliveryPersonDoesNotMatchError extends Error {
-    constructor() {
-        super("Delivery person does not match");
-        this.name = "DeliveryPersonDoesNotMatchError";
-    }
-}
