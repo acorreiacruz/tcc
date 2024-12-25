@@ -1,6 +1,9 @@
 import PrismaClientSingleton from "../../prisma/prismaClientSingleton";
 import { RegisterDeliveryPerson } from "../../src/application/use_case/registerDeliveryPerson";
-import { UpdateDeliveryPerson } from "../../src/application/use_case/updateDeliveryPerson";
+import {
+    UpdateDeliveryPerson,
+    UpdateDeliveryPersonCommand,
+} from "../../src/application/use_case/updateDeliveryPerson";
 import { InvalidEmailError } from "../../src/domain/value_object/email";
 import { InvalidPasswordError } from "../../src/domain/value_object/password";
 import { InvalidPhoneNumberError } from "../../src/domain/value_object/phoneNumber";
@@ -11,20 +14,22 @@ import {
 import { DeliveryPersonRepositoryDataBase } from "../../src/infraestructure/repository/deliveryPersonRepositoryDataBase";
 
 describe("Testing UpdateDeliveryPerson", () => {
-    const deliveryPersonRepository: DeliveryPersonRepository = new DeliveryPersonRepositoryDataBase();
+    const deliveryPersonRepository: DeliveryPersonRepository =
+        new DeliveryPersonRepositoryDataBase();
     const dbClient = PrismaClientSingleton.getInstance();
     const updateDeliveryPerson = new UpdateDeliveryPerson(
         deliveryPersonRepository
     );
-    const command = {
-        deliveryPersonId: "7d83a474-f489-4ca7-ba18-a1fd5bbbdaa1",
-        email: "jhondoe@gmail.com",
-        fullName: "Jhon Doe Stuart",
-        phoneNumber: "5586999999999",
-        plainPassword: "P@ssword#123",
-    };
+    let command: any;
 
     beforeEach(async () => {
+        command = {
+            deliveryPersonId: "7d83a474-f489-4ca7-ba18-a1fd5bbbdaa1",
+            email: "jhondoe@gmail.com",
+            fullName: "Jhon Doe Stuart",
+            phoneNumber: "5586999999999",
+            plainPassword: "P@ssword#123",
+        };
         await dbClient.deliveryPerson.create({
             data: {
                 id: command.deliveryPersonId,
