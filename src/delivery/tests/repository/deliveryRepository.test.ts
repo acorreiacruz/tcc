@@ -6,7 +6,6 @@ import {
 } from "../../src/infraestructure/repository/deliveryRepository";
 import { DeliveryRepositoryDataBase } from "../../src/infraestructure/repository/deliveryRepositoryDataBase";
 import { Location } from "../../src/domain/value_object/location";
-import DomainEvent from "../../../common/domainEvent";
 
 describe("Testing DeliveryRepository", () => {
     const deliveryRepository: DeliveryRepository =
@@ -18,25 +17,8 @@ describe("Testing DeliveryRepository", () => {
     );
     const deliveryPersonId = "04f44514-2f9f-4c8e-a97c-4f445c2f2a5d";
 
-    class MockEvent extends DomainEvent {
-        constructor() {
-            super(
-                "140a2105-421c-4a40-97db-5f5f0afb5f4b",
-                "ae746337-ed91-4ee2-a7be-5d5dc3aef849",
-                "MockEvent",
-                new Date(),
-                "MockSource",
-                {
-                    deliveryId: delivery.getId(),
-                    deliveryPersonId: deliveryPersonId,
-                }
-            );
-        }
-    }
-
     beforeEach(async () => {
         await dbClient.delivery.deleteMany();
-        await dbClient.deliveryOutbox.deleteMany();
         await dbClient.deliveryPerson.create({
             data: {
                 id: deliveryPersonId,
@@ -51,7 +33,6 @@ describe("Testing DeliveryRepository", () => {
 
     afterEach(async () => {
         await dbClient.delivery.deleteMany();
-        await dbClient.deliveryOutbox.deleteMany();
         await dbClient.deliveryPerson.deleteMany();
     });
 
@@ -77,23 +58,16 @@ describe("Testing DeliveryRepository", () => {
         );
     });
 
-    test("Must update delivery and create outbox record", async () => {
+    test("Must update a delivery", async () => {
         await deliveryRepository.create(delivery);
         delivery.assign(deliveryPersonId);
-        const mockEvent = new MockEvent();
-        await deliveryRepository.update(delivery, mockEvent);
+        await deliveryRepository.update(delivery);
 
         const updatedDelivery = await deliveryRepository.getById(
             delivery.getId()
         );
         expect(updatedDelivery.getDeliveryPersonId()).toBe(deliveryPersonId);
-        const outboxEvent = await dbClient.deliveryOutbox.findFirstOrThrow({
-            where: { eventId: mockEvent.eventId },
-        });
-        expect(outboxEvent).toBeDefined();
-        expect(outboxEvent.status).toBe("pending");
-        expect(outboxEvent.eventName).toBe(mockEvent.name);
-        expect(outboxEvent.event).toEqual(JSON.stringify(mockEvent.toJSON()));
+        expect(updatedDelivery.getStatus()).toBe("assigned");
     });
 
     test("Must get delivery with by id", async () => {
