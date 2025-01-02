@@ -20,6 +20,7 @@ Nesse tópico será delimitado a resolução para alguns problemas que serão en
 - Organização quanto a emissão e reação aos eventos
 - Broker para o armazenamento dos eventos
 
+
 ## Descrições Técnicas do Projeto
 
 ### Microsserviços
@@ -29,12 +30,10 @@ Nesse tópico será delimitado a resolução para alguns problemas que serão en
 #### Definição dos Microsserviços
 
 - Pedidos
-- Notificação
 - Pagamento
 - Entrega
 - Estoque
-- Usuário
-- Supermercados
+
 ### Arquitetura Orientada a Eventos
 
 #### Eventos
@@ -72,10 +71,8 @@ Relação dos eventos gerados e escutados por cada um dos microsserviços, além
   - StockReserved
   - StockReleased
   - StockConfirmed
-  - StockNotFounded
 - Escutados:
   - OrderPlaced
-  - OrderUpdated
   - OrderCanceled
   - OrderConfirmed
 

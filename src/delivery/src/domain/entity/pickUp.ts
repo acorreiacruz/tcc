@@ -1,4 +1,5 @@
 export class Pickup {
+    
     private id: string;
     private pickedUpAt?: Date;
     private customerId: string;
