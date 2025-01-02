@@ -1,4 +1,5 @@
 export class Location {
+    private static EarthRadius = 6371;
     private latitude: number;
     private longitude: number;
     constructor(latitude: number, longitude: number) {
@@ -9,7 +10,7 @@ export class Location {
         this.latitude = latitude;
         this.longitude = longitude;
     }
-    
+
     static isValidLatitude(value: number): boolean {
         return value >= -90 && value <= 90;
     }
@@ -24,6 +25,29 @@ export class Location {
 
     getLongitude(): number {
         return this.longitude;
+    }
+
+    static getDistance(from: Location, to: Location): number {
+        const startLatitudeInRadians = (from.getLatitude() * Math.PI) / 180;
+        const endLatitudeInRadians = (to.getLatitude() * Math.PI) / 180;
+        const latitudeDifferenceInRadians =
+            ((to.getLatitude() - from.getLatitude()) * Math.PI) / 180;
+        const longitudeDifferenceInRadians =
+            ((to.getLongitude() - from.getLongitude()) * Math.PI) / 180;
+        const haversineFormula =
+            Math.sin(latitudeDifferenceInRadians / 2) *
+                Math.sin(latitudeDifferenceInRadians / 2) +
+            Math.cos(startLatitudeInRadians) *
+                Math.cos(endLatitudeInRadians) *
+                Math.sin(longitudeDifferenceInRadians / 2) *
+                Math.sin(longitudeDifferenceInRadians / 2);
+        const angularDistanceInRadians =
+            2 *
+            Math.atan2(
+                Math.sqrt(haversineFormula),
+                Math.sqrt(1 - haversineFormula)
+            );
+        return Location.EarthRadius * angularDistanceInRadians;
     }
 
     toJSON(): any {
