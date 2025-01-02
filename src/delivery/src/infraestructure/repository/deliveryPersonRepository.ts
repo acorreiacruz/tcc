@@ -16,3 +16,10 @@ export class DeliveryPersonNotFoundError extends Error {
         this.name = "DeliveryPersonNotFoundError";
     }
 }
+
+export class NotAvailableDeliveryPersonsError extends Error {
+    constructor() {
+        super("There is no available delivery persons");
+        this.name = "NotAvailableDeliveryPersonsError";
+    }
+}

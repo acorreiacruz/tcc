@@ -105,13 +105,18 @@ export class DeliveryPersonRepositoryDataBase
             email: deliveryPerson.getEmail(),
             phoneNumber: deliveryPerson.getPhoneNumber(),
             passwordHash: deliveryPerson.getPassword(),
-            status: deliveryPerson.getStatus(),
+            status: deliveryPerson.getStatus()
         };
         if (deliveryPerson.getLocation()) {
             createData.currentLocation = {
-                create: {
-                    latitude: deliveryPerson.getLocation()?.getLatitude(),
-                    longitude: deliveryPerson.getLocation()?.getLongitude(),
+                connectOrCreate: {
+                    where: {
+                        deliveryPersonId: deliveryPerson.getId(),
+                    },
+                    create: {
+                        latitude: deliveryPerson.getLocation()?.getLatitude(),
+                        longitude: deliveryPerson.getLocation()?.getLongitude(),
+                    },
                 },
             };
         }
