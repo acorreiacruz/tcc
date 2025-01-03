@@ -1,4 +1,4 @@
-import { PrismaClient } from "../../infraestructure/orm/prisma/prisma-client";
+import { PrismaClient } from "../orm/prisma/prisma-client";
 import DomainEvent from "../../../common/domainEvent";
 import OutboxRepository from "../../../common/outboxRepository";
 import Outbox from "../../../common/outbox";
