@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./prisma-client/"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://root:root12345@localhost:5432/tcc?schema=stock"
+}
+
+model Stock {
+  stockId          String @id @map("id") @db.Uuid
+  itemId           String @map("item_id") @db.Uuid
+  totalQuantity    Int    @map("total_quantity")
+  reservedQuantity Int    @map("reserved_quantity")
+  @@map("stock")
+}
+
+model StockOutbox {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  eventId   String   @unique @map("event_id") @db.Uuid
+  eventName String   @map("event_name")
+  status    String
+  event   String
+  @@map("stock_outbox")
+}
