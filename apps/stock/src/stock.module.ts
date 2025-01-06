@@ -6,6 +6,9 @@ import ReleaseStock from "./application/use_case/releaseStock";
 import StockRepositoryDataBase from "./infraestructure/repository/stockRepositoryDatabase";
 import { PrismaService } from "./prisma.service";
 import { ConfigModule } from "@nestjs/config";
+import { ScheduleModule } from "@nestjs/schedule";
+import { OutboxController } from "./outbox.controller";
+import StockOutboxRepositoryDatabase from "./infraestructure/repository/stockOutboxRepositoryDatabase";
 
 @Module({
     imports: [
@@ -13,8 +16,9 @@ import { ConfigModule } from "@nestjs/config";
             envFilePath: "./env/.env",
             isGlobal: true,
         }),
+        ScheduleModule.forRoot(),
     ],
-    controllers: [StockController],
+    controllers: [StockController, OutboxController],
     providers: [
         PrismaService,
         ConfirmStock,
@@ -24,6 +28,7 @@ import { ConfigModule } from "@nestjs/config";
             provide: "StockRepository",
             useClass: StockRepositoryDataBase,
         },
+        StockOutboxRepositoryDatabase
     ],
     exports: [PrismaService],
 })

@@ -1,8 +1,10 @@
+import { Injectable } from "@nestjs/common";
 import { DomainEvent } from "../../../../common/domainEvent";
 import Outbox from "../../../../common/outbox";
 import OutboxRepository from "../../../../common/outboxRepository";
 import { PrismaService } from "../../prisma.service";
 
+@Injectable()
 export default class StockOutboxRepositoryDatabase implements OutboxRepository {
     constructor(private readonly prisma: PrismaService) {}
 

@@ -1,5 +1,5 @@
 import Outbox from "./outbox";
-import DomainEvent from "./domainEvent";
+import { DomainEvent } from "./domainEvent";
 
 export default interface OutboxRepository {
     create(event: DomainEvent): Promise<void>;
