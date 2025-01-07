@@ -33,12 +33,10 @@ export class StockController {
         const channel = context.getChannelRef();
         const originalMsg = context.getMessage();
         try {
-            console.log(event);
             await this.mediator.dispatch(event);
             channel.ack(originalMsg);
         } catch (error) {
-            console.log("Erro ao processar: ", error);
-            channel.nack(originalMsg);
+            console.log("Erro ao consumir evento: ", event.eventId, error);
         }
     }
 }
