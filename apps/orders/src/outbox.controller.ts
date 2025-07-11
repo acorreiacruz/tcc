@@ -1,6 +1,6 @@
 import { Controller, Logger } from "@nestjs/common";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import StockOutboxRepositoryDatabase from "./infraestructure/repository/stockOutboxRepositoryDatabase";
+import OrderOutboxRepositoryDatabase from "./infraestructure/repository/orderOutboxRepositoryDatabase";
 import { connect, Channel } from "amqplib";
 
 @Controller("outbox")
@@ -11,14 +11,12 @@ export class OutboxController {
     private receivers: Map<string, string>;
 
     constructor(
-        private readonly stockOutboxRepository: StockOutboxRepositoryDatabase
+        private readonly stockOutboxRepository: OrderOutboxRepositoryDatabase
     ) {
         this.initializeRabbitMQ();
-        this.exchange = "stock.exchange";
+        this.exchange = "order.exchange";
         this.receivers = new Map();
-        this.receivers.set("stock_reserved", "stock.reserved.rk");
-        this.receivers.set("stock_confirmed", "stock.confirmed.rk");
-        this.receivers.set("stock_released", "stock.released.rk");
+        this.receivers.set("order_placed", "order.placed.rk");
     }
 
     private async initializeRabbitMQ() {
@@ -38,11 +36,14 @@ export class OutboxController {
     @Cron(CronExpression.EVERY_5_SECONDS)
     async process() {
         try {
-            const pendingOutboxes = await this.stockOutboxRepository.getByStatus(["pending"]);
+            const pendingOutboxes =
+                await this.stockOutboxRepository.getByStatus(["pending"]);
+
             if (pendingOutboxes.length === 0) {
                 this.logger.log("Nenhum evento pendente para processar.");
                 return;
             }
+
             for (const outbox of pendingOutboxes) {
                 try {
                     const routingKey = this.receivers.get(outbox.eventName);

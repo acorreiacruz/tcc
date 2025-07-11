@@ -4,7 +4,6 @@ services:
   postgres:
     image: ${POSTGRES_IMAGE}
     container_name: postgres
-    restart: always
     environment:
       - POSTGRES_DB=${POSTGRES_NAME}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -16,7 +15,6 @@ services:
   rabbitmq:
     image: ${RABBITMQ_IMAGE}
     container_name: rabbitmq
-    restart: always
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
